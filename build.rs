@@ -20,16 +20,16 @@ fn make() -> &'static str {
 }
 
 fn main() {
-    let proj_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
-    let out_dir = env::var("OUT_DIR").unwrap();
+    let proj_dir = env::var("CARGO_MANIFEST_DIR").unwrap_or(".".to_owned());
+    let out_dir = "/Users/cfeitong/code/extern/imageproc/3rdparty/FreeImage/".to_owned();
 
     run(Command::new(make())
         .arg("-j4")
         .current_dir("3rdparty/FreeImage"));
-    run(Command::new("cp")
-        .arg("3rdparty/FreeImage/Dist/libfreeimage.a")
-        .arg(format!("{}/", out_dir)));
+    // run(Command::new("cp")
+    //     .arg("3rdparty/FreeImage/Dist/libfreeimage.a")
+    //     .arg(format!("{}/", out_dir)));
 
     println!("cargo:rustc-link-search=native={}", out_dir);
-    println!("cargo:rustc-flags=-l dylib=stdc++");
+    println!("cargo:rustc-link-lib=static=freeimage");
 }

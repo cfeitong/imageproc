@@ -1,15 +1,17 @@
-use nalgebra::*;
+extern crate nalgebra;
+
+use nalgebra::{Matrix3, DMatrix, DVector};
 use geo::{Point, Pointf};
 
 #[derive(Debug, Clone)]
 pub struct Affine2D {
-    pub t: Mat3<f32>,
-    pub t_inv: Mat3<f32>
+    pub t: Matrix3<f32>,
+    pub t_inv: Matrix3<f32>
 }
 
 impl Affine2D {
-    fn from_mat(t: Mat3<f32>) -> Option<Affine2D> {
-        let ti = t.inv();
+    fn from_mat(t: Matrix3<f32>) -> Option<Affine2D> {
+        let ti = t.try_inverse();
         match ti {
             Some(ti) => Some(Affine2D {
                 t: t,
@@ -20,17 +22,17 @@ impl Affine2D {
     }
 
     #[allow(non_snake_case)]
-    fn solve_affine(A: DMat<f32>, b: DVec<f32>) -> Option<DVec<f32>> {
+    fn solve_affine(A: DMatrix<f32>, b: DVector<f32>) -> Option<DVector<f32>> {
         if A.nrows() > A.ncols() {
             let At = A.transpose();
             let b = At.clone() * b;
-            let Ainv = (At * A).inv();
+            let Ainv = (At * A).try_inverse();
             match Ainv {
                 Some(m) => Some(m * b),
                 _ => None
             }
         } else {
-            Some(A.inv().unwrap() * b)
+            Some(A.try_inverse().unwrap() * b)
         }
     }
 
@@ -39,8 +41,8 @@ impl Affine2D {
             return None;
         }
         let n = src.len();
-        let mut m: DMat<f32> = DMat::new_zeros(2 * n, 6);
-        let mut b: DVec<f32> = DVec::new_zeros(2 * n);
+        let mut m: DMatrix<f32> = DMatrix::from_element(2 * n, 6, 0.0);
+        let mut b: DVector<f32> = DVector::from_element(2 * n, 0.0);
         for i in 0..n as usize {
             m[(i, 0)] = src[i].x;
             m[(i, 1)] = src[i].y;
@@ -53,7 +55,7 @@ impl Affine2D {
         }
         match Affine2D::solve_affine(m, b) {
             Some(x) => {
-                let t: Mat3<f32> = Mat3::new(
+                let t: Matrix3<f32> = Matrix3::new(
                     x[0], x[1], x[2],
                     x[3], x[4], x[5],
                     0f32, 0f32, 1f32
@@ -69,8 +71,8 @@ impl Affine2D {
             return None;
         }
         let n = src.len();
-        let mut m: DMat<f32> = DMat::new_zeros(2 * n, 4);
-        let mut b: DVec<f32> = DVec::new_zeros(2 * n);
+        let mut m: DMatrix<f32> = DMatrix::from_element(2 * n, 4, 0.0);
+        let mut b: DVector<f32> = DVector::from_element(2 * n, 0.0);
         for i in 0..n as usize {
             b[i] = dst[i].x;
             b[n + i] = dst[i].y;
@@ -88,7 +90,7 @@ impl Affine2D {
         }
         match Affine2D::solve_affine(m, b) {
             Some(x) => {
-                let t: Mat3<f32> = Mat3::new(
+                let t: Matrix3<f32> = Matrix3::new(
                     x[0], x[1], x[2],
                     -x[1],x[0], x[3],
                     0f32, 0f32, 1f32

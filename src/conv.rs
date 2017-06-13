@@ -74,11 +74,11 @@ pub fn conv2d_sep<T: Pixel>(src: &Image<T>, kernelx: &[f32], kernely: &[f32]) ->
 
 fn gaussian_kernel(w: usize, sigma: f32) -> Vec<f32> {
     let hw = (w + 1) / 2;
-    let sigma: f32 = match sigma {
-        0f32...0.00001f32 => 0.3 * ((w as f32 - 1.0) * 0.5 - 1.0) + 0.8,
-        _ => sigma
+    let sigma: f32 = if 0f32 <= sigma && sigma <= 0.00001f32 {
+        ((w as f32 - 1.0) * 0.5 - 1.0) + 0.8
+    } else {
+        sigma
     };
-    //sigma = 0.3 * ((w - 1) * 0.5 - 1) + 0.8;
     let mut k = vec![0f32; w];
     let s2 = sigma * sigma;
     for i in 0..hw {
