@@ -14,8 +14,4 @@ pub mod geo;
 pub mod math;
 pub mod conv;
 
-pub use imageio::{
-    ImageIO,
-    FreeImageIO
-};
-
+pub use imageio::{ImageIO, FreeImageIO};

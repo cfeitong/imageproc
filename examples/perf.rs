@@ -11,12 +11,12 @@ use imageproc::image::*;
 use imageproc::conv::*;
 use imageproc::imageio::{ImageIO, FreeImageIO};
 
-#[allow(unused_variables)] 
+#[allow(unused_variables)]
 #[allow(dead_code)]
 fn main() {
     println!("start perf...");
 
-    let src = ImageBgra::new(200,100);
+    let src = ImageBGRA::new(200, 100);
     let start = PreciseTime::now();
 
     for _ in 0..1000 {

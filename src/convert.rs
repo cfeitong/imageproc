@@ -10,16 +10,14 @@ pub trait ColorMapper {
     fn to(src: &Self::SrcType) -> Self::DstType;
 }
 
-pub struct MapBgraGray;
-impl ColorMapper for MapBgraGray {
-    type SrcType = Bgra<u8>;
+pub struct MapBGRAGray;
+impl ColorMapper for MapBGRAGray {
+    type SrcType = BGRA<u8>;
     type DstType = Gray<u8>;
 
     #[inline(always)]
     fn to(src: &Self::SrcType) -> Self::DstType {
-        let d = ((src[0] as u32 * 28
-                + src[1] as u32 * 151
-                + src[2] as u32 * 77) >> 8) as u8;
+        let d = ((src[0] as u32 * 28 + src[1] as u32 * 151 + src[2] as u32 * 77) >> 8) as u8;
         Gray([d])
     }
 }
@@ -27,37 +25,35 @@ impl ColorMapper for MapBgraGray {
 pub struct MapGrayBgra;
 impl ColorMapper for MapGrayBgra {
     type SrcType = Gray<u8>;
-    type DstType = Bgra<u8>;
+    type DstType = BGRA<u8>;
 
     #[inline(always)]
     fn to(src: &Self::SrcType) -> Self::DstType {
         let v = src[0];
-        Bgra([v, v, v, 255])
+        BGRA([v, v, v, 255])
     }
 }
 
 pub struct MapGrayBgr;
 impl ColorMapper for MapGrayBgr {
     type SrcType = Gray<u8>;
-    type DstType = Bgr<u8>;
+    type DstType = BGR<u8>;
 
     #[inline(always)]
     fn to(src: &Self::SrcType) -> Self::DstType {
         let v = src[0];
-        Bgr([v, v, v])
+        BGR([v, v, v])
     }
 }
 
 pub struct MapBgrGray;
 impl ColorMapper for MapBgrGray {
-    type SrcType = Bgr<u8>;
+    type SrcType = BGR<u8>;
     type DstType = Gray<u8>;
 
     #[inline(always)]
     fn to(src: &Self::SrcType) -> Self::DstType {
-        let d = ((src[0] as u32 * 28
-                + src[1] as u32 * 151
-                + src[2] as u32 * 77) >> 8) as u8;
+        let d = ((src[0] as u32 * 28 + src[1] as u32 * 151 + src[2] as u32 * 77) >> 8) as u8;
         Gray([d])
     }
 }
@@ -73,8 +69,9 @@ impl ColorMapper for MapGrayGrayf {
     }
 }
 
-pub fn convert<M>(src: &Image<M::SrcType>) -> Image<M::DstType> 
-    where M: ColorMapper {
+pub fn convert<M>(src: &Image<M::SrcType>) -> Image<M::DstType>
+    where M: ColorMapper
+{
     let mut dst = Image::new(src.width(), src.height());
     for h in 0..src.height() {
         let psrc = src.row(h);
@@ -86,10 +83,10 @@ pub fn convert<M>(src: &Image<M::SrcType>) -> Image<M::DstType>
     dst
 }
 
-pub fn split<T, U>(src: &Image<T>) -> Vec<Image<Gray<U>>> 
+pub fn split<T, U>(src: &Image<T>) -> Vec<Image<Gray<U>>>
     where T: Pixel,
           U: Primitive,
-          T: Index<usize, Output=U>
+          T: Index<usize, Output = U>
 {
     let mut out = Vec::with_capacity(src.channels() as usize);
     for _ in 0..src.channels() {
@@ -112,7 +109,7 @@ pub fn split<T, U>(src: &Image<T>) -> Vec<Image<Gray<U>>>
 pub fn merge<P, T>(src: &Vec<Image<Gray<P>>>) -> Image<T>
     where P: Primitive,
           T: Pixel,
-          T: IndexMut<usize, Output=P>
+          T: IndexMut<usize, Output = P>
 {
     assert_eq!(T::channels() as usize, src.len());
     let src0 = &src[0];
@@ -140,15 +137,15 @@ mod test {
 
     #[test]
     fn test_bgra_to_gray() {
-        let mut src = ImageBgra::new(4, 1);
+        let mut src = ImageBGRA::new(4, 1);
         {
             let r = src.row_mut(0);
-            r[0] = Bgra([255, 0, 0, 255]);
-            r[1] = Bgra([0, 255, 0, 255]);
-            r[2] = Bgra([0, 0, 255, 255]);
-            r[3] = Bgra([255, 255, 255, 255]);
+            r[0] = BGRA([255, 0, 0, 255]);
+            r[1] = BGRA([0, 255, 0, 255]);
+            r[2] = BGRA([0, 0, 255, 255]);
+            r[3] = BGRA([255, 255, 255, 255]);
         }
-        let dst = convert::<MapBgraGray>(&src);
+        let dst = convert::<MapBGRAGray>(&src);
         assert_eq!(dst[(0, 0)], Gray([27]));
         assert_eq!(dst[(1, 0)], Gray([150]));
         assert_eq!(dst[(2, 0)], Gray([76]));
@@ -157,20 +154,19 @@ mod test {
 
     #[test]
     fn test_convert() {
-        let mut src = ImageBgra::new(2000,1000);
-        src.fill(&Bgra([100,100,100,255]));
-        let _ = convert::<MapBgraGray>(&src);
+        let mut src = ImageBGRA::new(2000, 1000);
+        src.fill(&BGRA([100, 100, 100, 255]));
+        let _ = convert::<MapBGRAGray>(&src);
     }
 
     #[test]
     fn test_split_and_merge() {
-        let mut src = ImageBgra::new(20,10);
-        src.fill(&Bgra([100,100,100,255]));
+        let mut src = ImageBGRA::new(20, 10);
+        src.fill(&BGRA([100, 100, 100, 255]));
         let t = split(&src);
-        let out: ImageBgra = merge(&t);
+        let out: ImageBGRA = merge(&t);
         for (x, y, p) in out.iter() {
             assert_eq!(*p, src[(x, y)]);
         }
     }
 }
-

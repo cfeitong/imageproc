@@ -17,19 +17,24 @@ fn run(cmd: &mut Command) {
 }
 
 fn make() -> &'static str {
-    if cfg!(target_os = "freebsd") {"gmake"} else {"make"}
+    if cfg!(target_os = "freebsd") {
+        "gmake"
+    } else {
+        "make"
+    }
 }
 
 fn main() {
-    let freeimage_dir = env::current_dir().unwrap()
-                        .join(Path::new("3rdparty/FreeImage/Dist"))
-                        .into_os_string()
-                        .into_string()
-                        .unwrap();
+    let freeimage_dir = env::current_dir()
+        .unwrap()
+        .join(Path::new("3rdparty/FreeImage/Dist"))
+        .into_os_string()
+        .into_string()
+        .unwrap();
 
     run(Command::new(make())
-        .arg("-j4")
-        .current_dir("3rdparty/FreeImage"));
+            .arg("-j4")
+            .current_dir("3rdparty/FreeImage"));
 
     println!("cargo:rustc-link-search=native={}", freeimage_dir);
     println!("cargo:rustc-flags=-l dylib=c++");

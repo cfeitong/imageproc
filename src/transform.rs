@@ -8,7 +8,7 @@ use num::traits::ToPrimitive;
 
 pub enum InterplateType {
     Nearest,
-    Bilinear
+    Bilinear,
 }
 
 pub fn resize_nearest<T: Pixel>(src: &Image<T>, width: u32, height: u32) -> Image<T> {
@@ -17,13 +17,11 @@ pub fn resize_nearest<T: Pixel>(src: &Image<T>, width: u32, height: u32) -> Imag
     let xscale: f32 = src.width() as f32 / width as f32;
     let mut xidx: Vec<usize> = Vec::with_capacity(width as usize);
     for w in 0..width as usize {
-        xidx.push(clipped_round(w as f32 * xscale, 0,
-                src.width() as i32 - 1) as usize);
+        xidx.push(clipped_round(w as f32 * xscale, 0, src.width() as i32 - 1) as usize);
     }
     for h in 0..height {
         let pdst = dst.row_mut(h);
-        let psrc = src.row(clipped_round(h as f32 * yscale, 0,
-                src.height() as i32 - 1) as u32);
+        let psrc = src.row(clipped_round(h as f32 * yscale, 0, src.height() as i32 - 1) as u32);
         for w in 0..width as usize {
             pdst[w] = psrc[xidx[w]];
         }
@@ -65,24 +63,29 @@ pub fn resize_bilinear<T: Pixel>(src: &Image<T>, width: u32, height: u32) -> Ima
             //let a = psrc0[x0].blend(psrc0[x1], d_0[w]);
             //let b = psrc1[x0].blend(psrc1[x1], d_0[w]);
             //pdst[w] = a.blend(b, dy);
-            pdst[w] = psrc0[x0].blend4(
-                psrc0[x1],
-                psrc1[x0],
-                psrc1[x1],
-                d_0[w], dy);
+            pdst[w] = psrc0[x0].blend4(psrc0[x1], psrc1[x0], psrc1[x1], d_0[w], dy);
         }
     }
     dst
 }
 
-pub fn resize<T: Pixel>(src: &Image<T>, width: u32, height: u32, interp: InterplateType) -> Image<T> {
+pub fn resize<T: Pixel>(src: &Image<T>,
+                        width: u32,
+                        height: u32,
+                        interp: InterplateType)
+                        -> Image<T> {
     match interp {
         InterplateType::Nearest => resize_nearest(src, width, height),
-        InterplateType::Bilinear => resize_bilinear(src, width, height)
+        InterplateType::Bilinear => resize_bilinear(src, width, height),
     }
 }
 
-pub fn warp_perspective<T: Pixel>(src: &Image<T>, width: u32, height: u32, affine :&Affine2D, interp :InterplateType) -> Image<T> {
+pub fn warp_perspective<T: Pixel>(src: &Image<T>,
+                                  width: u32,
+                                  height: u32,
+                                  affine: &Affine2D,
+                                  interp: InterplateType)
+                                  -> Image<T> {
     let mut dst: Image<T> = Image::new(width, height);
     for h in 0..height {
         let pdst = dst.row_mut(h);
@@ -94,23 +97,19 @@ pub fn warp_perspective<T: Pixel>(src: &Image<T>, width: u32, height: u32, affin
                 InterplateType::Nearest => {
                     let ix = sx.round() as i32;
                     let iy = sy.round() as i32;
-                    if ix >= 0 && ix < src.width() as i32 
-                        && iy >= 0 && iy < src.height() as i32 {
-                            pdst[w as usize] = src[(ix as u32, iy as u32)];
-                        }
-                },
+                    if ix >= 0 && ix < src.width() as i32 && iy >= 0 && iy < src.height() as i32 {
+                        pdst[w as usize] = src[(ix as u32, iy as u32)];
+                    }
+                }
                 InterplateType::Bilinear => {
                     let u = sx.ceil() - sx;
                     let v = sy.ceil() - sy;
                     let x0 = clip(sx.floor() as i32, 0, src.width() as i32 - 1) as u32;
-                    let y0 = clip(sy.floor() as i32, 0, src.height() as i32 -1) as u32;
-                    let x1 = clip(sx.ceil() as i32, 0, src.width() as i32 -1) as u32;
+                    let y0 = clip(sy.floor() as i32, 0, src.height() as i32 - 1) as u32;
+                    let x1 = clip(sx.ceil() as i32, 0, src.width() as i32 - 1) as u32;
                     let y1 = clip(sy.ceil() as i32, 0, src.height() as i32 - 1) as u32;
-                    pdst[w as usize] = src[(x0, y0)].blend4(
-                        src[(x1, y0)],
-                        src[(x0, y1)],
-                        src[(x1, y1)],
-                        u, v);
+                    pdst[w as usize] =
+                        src[(x0, y0)].blend4(src[(x1, y0)], src[(x0, y1)], src[(x1, y1)], u, v);
                 }
             }
         }
@@ -141,7 +140,7 @@ pub fn flip_horizontal<T: Pixel>(src: &Image<T>) -> Image<T> {
 pub fn min<T, U>(src: &Image<T>) -> U
     where T: Pixel,
           U: Pixel,
-          T: Index<usize, Output=U::Subpixel>
+          T: Index<usize, Output = U::Subpixel>
 {
     let mut t = [U::Subpixel::max_value(); MAX_CHANNEL_COUNT];
     for (_, _, p) in src.iter() {
@@ -157,7 +156,7 @@ pub fn min<T, U>(src: &Image<T>) -> U
 pub fn max<T, U>(src: &Image<T>) -> U
     where T: Pixel,
           U: Pixel,
-          T: Index<usize, Output=U::Subpixel>
+          T: Index<usize, Output = U::Subpixel>
 {
     let mut t = [U::Subpixel::min_value(); MAX_CHANNEL_COUNT];
     for (_, _, p) in src.iter() {
@@ -170,11 +169,11 @@ pub fn max<T, U>(src: &Image<T>) -> U
     U::from_raw(&t)
 }
 
-pub fn normalize<U, V, M>(src: &Image<U>, alpha: f32, beta: f32) -> Image<V> 
+pub fn normalize<U, V, M>(src: &Image<U>, alpha: f32, beta: f32) -> Image<V>
     where U: Pixel,
           V: Pixel,
           M: Pixel,
-          U: Index<usize, Output=M::Subpixel>
+          U: Index<usize, Output = M::Subpixel>
 {
     let mut dst = Image::<V>::new(src.width(), src.height());
     let mut mins = [0f32; MAX_CHANNEL_COUNT];
@@ -200,11 +199,11 @@ pub fn normalize<U, V, M>(src: &Image<U>, alpha: f32, beta: f32) -> Image<V>
 //}
 
 #[derive(Debug, Clone)]
-pub enum RotateType{
+pub enum RotateType {
     Cw0,
     Cw90,
     Cw180,
-    Cw270
+    Cw270,
 }
 
 pub fn rotate_cw90<T: Pixel>(src: &Image<T>) -> Image<T> {
@@ -248,7 +247,7 @@ pub fn rotate<T: Pixel>(src: &Image<T>, rtype: RotateType) -> Image<T> {
         RotateType::Cw0 => src.clone(),
         RotateType::Cw90 => rotate_cw90(src),
         RotateType::Cw180 => rotate_cw180(src),
-        RotateType::Cw270 => rotate_cw270(src)
+        RotateType::Cw270 => rotate_cw270(src),
     }
 }
 
@@ -256,7 +255,7 @@ pub fn rotate<T: Pixel>(src: &Image<T>, rtype: RotateType) -> Image<T> {
 mod test {
     use super::*;
     use std::path::Path;
-    use image::ImageBgra;
+    use image::ImageBGRA;
     use imageio::ImageIO;
     use imageio::FreeImageIO;
     use geo::*;
@@ -265,7 +264,7 @@ mod test {
     #[test]
     fn test_resize() {
         let path = Path::new("./tests/cat.jpg");
-        let img: ImageBgra = FreeImageIO::from_path(&path).unwrap();
+        let img: ImageBGRA = FreeImageIO::from_path(&path).unwrap();
 
         let dst = resize_nearest(&img, 600, 400);
         assert_eq!(dst.width(), 600);
@@ -283,7 +282,7 @@ mod test {
     #[test]
     fn test_warp() {
         let path = Path::new("./tests/cat.jpg");
-        let img: ImageBgra = FreeImageIO::from_path(&path).unwrap();
+        let img: ImageBGRA = FreeImageIO::from_path(&path).unwrap();
         let src = vec![Pointf::new(0f32, 0f32), Pointf::new(1f32, 0f32)];
         let dst = vec![Pointf::new(0f32, 0f32), Pointf::new(1f32, 1f32)];
 
@@ -300,7 +299,7 @@ mod test {
     #[test]
     fn test_flip() {
         let path = Path::new("./tests/cat.jpg");
-        let img: ImageBgra = FreeImageIO::from_path(&path).unwrap();
+        let img: ImageBGRA = FreeImageIO::from_path(&path).unwrap();
 
         let out = flip_vertical(&img);
         let target = Path::new("/tmp/test-flip-out1.jpg");
@@ -314,7 +313,7 @@ mod test {
     #[test]
     fn test_rotate() {
         let path = Path::new("./tests/cat.jpg");
-        let img: ImageBgra = FreeImageIO::from_path(&path).unwrap();
+        let img: ImageBGRA = FreeImageIO::from_path(&path).unwrap();
 
         let out = rotate_cw90(&img);
         let target = Path::new("/tmp/test-rotate-out1.jpg");
@@ -329,4 +328,3 @@ mod test {
         FreeImageIO::save(&target, &out).unwrap();
     }
 }
-

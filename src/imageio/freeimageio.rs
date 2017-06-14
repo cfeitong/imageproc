@@ -7,63 +7,72 @@ use self::libc::{c_int, c_uint, c_void, c_char, c_uchar};
 use std::sync::{Once, ONCE_INIT};
 
 use imageio::{ImageIO, ImagePing, ImageInfo};
-use image::{ImageBgra, ImageBgr, ImageGray,
-    ImageError, Image, Pixel};
+use image::{ImageBGRA, ImageBGR, ImageGray, ImageError, Image, Pixel};
 
 #[repr(C)]
 #[allow(non_camel_case_types)]
 #[derive(Debug, PartialEq, Eq, Clone)]
 enum ImageFormat {
     FIF_UNKNOWN = -1,
-    FIF_BMP		= 0,
-    FIF_ICO		= 1,
-    FIF_JPEG	= 2,
-    FIF_JNG		= 3,
-    FIF_KOALA	= 4,
-    FIF_LBM		= 5,
-    FIF_MNG		= 6,
-    FIF_PBM		= 7,
-    FIF_PBMRAW	= 8,
-    FIF_PCD		= 9,
-    FIF_PCX		= 10,
-    FIF_PGM		= 11,
-    FIF_PGMRAW	= 12,
-    FIF_PNG		= 13,
-    FIF_PPM		= 14,
-    FIF_PPMRAW	= 15,
-    FIF_RAS		= 16,
-    FIF_TARGA	= 17,
-    FIF_TIFF	= 18,
-    FIF_WBMP	= 19,
-    FIF_PSD		= 20,
-    FIF_CUT		= 21,
-    FIF_XBM		= 22,
-    FIF_XPM		= 23,
-    FIF_DDS		= 24,
-    FIF_GIF     = 25,
-    FIF_HDR		= 26,
-    FIF_FAXG3	= 27,
-    FIF_SGI		= 28,
-    FIF_EXR		= 29,
-    FIF_J2K		= 30,
-    FIF_JP2		= 31,
-    FIF_PFM		= 32,
-    FIF_PICT	= 33,
-    FIF_RAW		= 34,
-    FIF_WEBP	= 35,
-    FIF_JXR		= 36
+    FIF_BMP = 0,
+    FIF_ICO = 1,
+    FIF_JPEG = 2,
+    FIF_JNG = 3,
+    FIF_KOALA = 4,
+    FIF_LBM = 5,
+    FIF_MNG = 6,
+    FIF_PBM = 7,
+    FIF_PBMRAW = 8,
+    FIF_PCD = 9,
+    FIF_PCX = 10,
+    FIF_PGM = 11,
+    FIF_PGMRAW = 12,
+    FIF_PNG = 13,
+    FIF_PPM = 14,
+    FIF_PPMRAW = 15,
+    FIF_RAS = 16,
+    FIF_TARGA = 17,
+    FIF_TIFF = 18,
+    FIF_WBMP = 19,
+    FIF_PSD = 20,
+    FIF_CUT = 21,
+    FIF_XBM = 22,
+    FIF_XPM = 23,
+    FIF_DDS = 24,
+    FIF_GIF = 25,
+    FIF_HDR = 26,
+    FIF_FAXG3 = 27,
+    FIF_SGI = 28,
+    FIF_EXR = 29,
+    FIF_J2K = 30,
+    FIF_JP2 = 31,
+    FIF_PFM = 32,
+    FIF_PICT = 33,
+    FIF_RAW = 34,
+    FIF_WEBP = 35,
+    FIF_JXR = 36,
 }
 
 const JPEG_EXIFROTATE: c_int = 0x0008;
 const FIF_LOAD_NOPIXELS: c_int = 0x8000;
 
 #[link(name = "freeimage", kind = "static")]
-extern {
+extern "C" {
     fn FreeImage_Initialise(load_local_only: c_int);
     fn FreeImage_DeInitialise();
-    fn FreeImage_Allocate(width: c_int, height: c_int, bpp: c_int, red_mask: c_uint, green_mask: c_uint, blue_mask: c_uint) -> *mut c_void;
+    fn FreeImage_Allocate(width: c_int,
+                          height: c_int,
+                          bpp: c_int,
+                          red_mask: c_uint,
+                          green_mask: c_uint,
+                          blue_mask: c_uint)
+                          -> *mut c_void;
     fn FreeImage_Load(fif: ImageFormat, filename: *const c_char, flag: c_int) -> *mut c_void;
-    fn FreeImage_Save(fif: ImageFormat, dib: *mut c_void, filename: *const c_char, flags: c_int) -> c_int;
+    fn FreeImage_Save(fif: ImageFormat,
+                      dib: *mut c_void,
+                      filename: *const c_char,
+                      flags: c_int)
+                      -> c_int;
     fn FreeImage_Unload(dib: *mut c_void);
 
     fn FreeImage_GetFileType(filename: *const c_char, size: c_int) -> ImageFormat;
@@ -84,9 +93,11 @@ extern {
 fn init() {
     static LIBSTART: Once = ONCE_INIT;
     LIBSTART.call_once(|| {
-        // XXX not unloaded
-        unsafe { FreeImage_Initialise(0); }
-    });
+                           // XXX not unloaded
+                           unsafe {
+                               FreeImage_Initialise(0);
+                           }
+                       });
 }
 
 unsafe fn from_raw<T: Pixel>(np: *mut c_void) -> Image<T> {
@@ -103,12 +114,12 @@ unsafe fn from_raw<T: Pixel>(np: *mut c_void) -> Image<T> {
             panic!("No image data!");
         }
 
-        let sptr_end =  sptr.offset((pitch * (h - 1)) as isize);
+        let sptr_end = sptr.offset((pitch * (h - 1)) as isize);
         for y in 0..h {
             // freeimage save image reversely
             ptr::copy(sptr_end.offset(-((y * pitch) as isize)),
-            pdst.offset((y * stride_dst) as isize),
-            stride_dst as usize);
+                      pdst.offset((y * stride_dst) as isize),
+                      stride_dst as usize);
         }
 
     }
@@ -116,8 +127,7 @@ unsafe fn from_raw<T: Pixel>(np: *mut c_void) -> Image<T> {
     image
 }
 
-unsafe fn try_load_from_file(path: &Path, bits :u8, ping: bool)
-    -> *mut c_void {
+unsafe fn try_load_from_file(path: &Path, bits: u8, ping: bool) -> *mut c_void {
     let c_path = CString::new(path.to_str().unwrap()).unwrap();
     let format = FreeImage_GetFileType(c_path.as_ptr(), 0);
     if format == ImageFormat::FIF_UNKNOWN {
@@ -138,10 +148,10 @@ unsafe fn try_load_from_file(path: &Path, bits :u8, ping: bool)
     let old_bpp = FreeImage_GetBPP(p);
     if old_bpp != bits as u32 {
         match bits {
-            8  => np = FreeImage_ConvertToGreyscale(p),
+            8 => np = FreeImage_ConvertToGreyscale(p),
             24 => np = FreeImage_ConvertTo24Bits(p),
             32 => np = FreeImage_ConvertTo32Bits(p),
-            _ => return ptr::null_mut()
+            _ => return ptr::null_mut(),
         }
         FreeImage_Unload(p);
     } else {
@@ -155,7 +165,11 @@ unsafe fn to_raw<T: Pixel>(image: &Image<T>) -> *mut c_void {
     assert!(src_bits == 8 || src_bits == 24 || src_bits == 32);
     // XXX opt me
     let p = FreeImage_Allocate(image.width() as i32,
-    image.height() as i32, src_bits, 0, 0, 0);
+                               image.height() as i32,
+                               src_bits,
+                               0,
+                               0,
+                               0);
     if p.is_null() {
         return p;
     }
@@ -171,12 +185,12 @@ unsafe fn to_raw<T: Pixel>(image: &Image<T>) -> *mut c_void {
             panic!("No image data!");
         }
 
-        let dptr_end =  dptr.offset((pitch * (h - 1)) as isize);
+        let dptr_end = dptr.offset((pitch * (h - 1)) as isize);
         for y in 0..h {
             // freeimage save image reversely
             ptr::copy(psrc.offset((y * stride_src) as isize),
-            dptr_end.offset(-((y * pitch) as isize)),
-            stride_src as usize);
+                      dptr_end.offset(-((y * pitch) as isize)),
+                      stride_src as usize);
         }
     }
     p
@@ -243,8 +257,8 @@ macro_rules! define_io_for_image(
 );
 
 define_io_for_image!(ImageGray, 8);
-define_io_for_image!(ImageBgr , 24);
-define_io_for_image!(ImageBgra, 32);
+define_io_for_image!(ImageBGR, 24);
+define_io_for_image!(ImageBGRA, 32);
 
 impl ImagePing for FreeImageIO {
     fn ping_from_path(path: &Path) -> Result<ImageInfo, ImageError> {
@@ -281,13 +295,13 @@ mod test {
     #[test]
     fn test_load() {
         let path = Path::new("./tests/cat.jpg");
-        let img: ImageBgra = FreeImageIO::from_path(&path).unwrap();
+        let img: ImageBGRA = FreeImageIO::from_path(&path).unwrap();
         assert_eq!(img.width(), 150);
         assert_eq!(img.height(), 120);
         assert_eq!(img.bits_per_pixel(), 32);
         assert_eq!(img.channels(), 4);
 
-        let img: ImageBgr = FreeImageIO::from_path(&path).unwrap();
+        let img: ImageBGR = FreeImageIO::from_path(&path).unwrap();
         assert_eq!(img.width(), 150);
         assert_eq!(img.height(), 120);
         assert_eq!(img.bits_per_pixel(), 24);
@@ -311,16 +325,15 @@ mod test {
     #[test]
     fn test_save() {
         let path = Path::new("./tests/cat.jpg");
-        let img: ImageBgra = FreeImageIO::from_path(&path).unwrap();
+        let img: ImageBGRA = FreeImageIO::from_path(&path).unwrap();
         let target = Path::new("/tmp/test-out.png");
         FreeImageIO::save(&target, &img).unwrap();
 
         let target = Path::new("/tmp/test-out-32.jpg");
         FreeImageIO::save(&target, &img).unwrap();
 
-        let gray = convert::convert::<convert::MapBgraGray>(&img);
+        let gray = convert::convert::<convert::MapBGRAGray>(&img);
         let target = Path::new("/tmp/test-out-8.jpg");
         FreeImageIO::save(&target, &gray).unwrap();
     }
 }
-

@@ -6,18 +6,15 @@ use geo::{Point, Pointf};
 #[derive(Debug, Clone)]
 pub struct Affine2D {
     pub t: Matrix3<f32>,
-    pub t_inv: Matrix3<f32>
+    pub t_inv: Matrix3<f32>,
 }
 
 impl Affine2D {
     fn from_mat(t: Matrix3<f32>) -> Option<Affine2D> {
         let ti = t.try_inverse();
         match ti {
-            Some(ti) => Some(Affine2D {
-                t: t,
-                t_inv: ti
-            }),
-            _ => None
+            Some(ti) => Some(Affine2D { t: t, t_inv: ti }),
+            _ => None,
         }
     }
 
@@ -29,7 +26,7 @@ impl Affine2D {
             let Ainv = (At * A).try_inverse();
             match Ainv {
                 Some(m) => Some(m * b),
-                _ => None
+                _ => None,
             }
         } else {
             Some(A.try_inverse().unwrap() * b)
@@ -55,14 +52,11 @@ impl Affine2D {
         }
         match Affine2D::solve_affine(m, b) {
             Some(x) => {
-                let t: Matrix3<f32> = Matrix3::new(
-                    x[0], x[1], x[2],
-                    x[3], x[4], x[5],
-                    0f32, 0f32, 1f32
-                    );
+                let t: Matrix3<f32> =
+                    Matrix3::new(x[0], x[1], x[2], x[3], x[4], x[5], 0f32, 0f32, 1f32);
                 Affine2D::from_mat(t)
             }
-            _ => None
+            _ => None,
         }
     }
 
@@ -90,28 +84,25 @@ impl Affine2D {
         }
         match Affine2D::solve_affine(m, b) {
             Some(x) => {
-                let t: Matrix3<f32> = Matrix3::new(
-                    x[0], x[1], x[2],
-                    -x[1],x[0], x[3],
-                    0f32, 0f32, 1f32
-                    );
+                let t: Matrix3<f32> =
+                    Matrix3::new(x[0], x[1], x[2], -x[1], x[0], x[3], 0f32, 0f32, 1f32);
                 Affine2D::from_mat(t)
             }
-            _ => None
+            _ => None,
         }
     }
 
     pub fn map_point(&self, src: Pointf) -> Pointf {
         Point {
-            x: self.t[(0,0)] * src.x + self.t[(0,1)] * src.y + self.t[(0,2)],
-            y: self.t[(1,0)] * src.x + self.t[(1,1)] * src.y + self.t[(1,2)],
+            x: self.t[(0, 0)] * src.x + self.t[(0, 1)] * src.y + self.t[(0, 2)],
+            y: self.t[(1, 0)] * src.x + self.t[(1, 1)] * src.y + self.t[(1, 2)],
         }
     }
 
     pub fn map_point_inv(&self, src: Pointf) -> Pointf {
         Point {
-            x: self.t_inv[(0,0)] * src.x + self.t_inv[(0,1)] * src.y + self.t_inv[(0,2)],
-            y: self.t_inv[(1,0)] * src.x + self.t_inv[(1,1)] * src.y + self.t_inv[(1,2)],
+            x: self.t_inv[(0, 0)] * src.x + self.t_inv[(0, 1)] * src.y + self.t_inv[(0, 2)],
+            y: self.t_inv[(1, 0)] * src.x + self.t_inv[(1, 1)] * src.y + self.t_inv[(1, 2)],
         }
     }
 
@@ -138,8 +129,12 @@ mod test {
     use super::*;
     #[test]
     fn test_affine() {
-        let src = vec![Pointf::new(0f32,0f32), Pointf::new(1f32, 0f32), Pointf::new(0f32, 1f32)];
-        let dst = vec![Pointf::new(1f32,0f32), Pointf::new(1f32, 1f32), Pointf::new(0f32, 0f32)];
+        let src = vec![Pointf::new(0f32, 0f32),
+                       Pointf::new(1f32, 0f32),
+                       Pointf::new(0f32, 1f32)];
+        let dst = vec![Pointf::new(1f32, 0f32),
+                       Pointf::new(1f32, 1f32),
+                       Pointf::new(0f32, 0f32)];
         let aff1 = Affine2D::affine_from_points(&src, &dst).unwrap();
         assert_eq!(aff1.map_point(src[0].clone()), dst[0]);
         assert_eq!(aff1.map_point_inv(dst[0].clone()), src[0]);
@@ -156,4 +151,3 @@ mod test {
         assert_eq!(aff.map_point(pt), Pointf::new(0f32, 4f32));
     }
 }
-

@@ -9,17 +9,17 @@ pub struct Rect<T: GeoScalar> {
     pub x: T,
     pub y: T,
     pub width: T,
-    pub height: T
+    pub height: T,
 }
 
 impl<T: GeoScalar> Rect<T> {
     pub fn new(x: T, y: T, w: T, h: T) -> Rect<T> {
-        return Rect{
-            x: x,
-            y: y,
-            width: w,
-            height: h,
-        }
+        return Rect {
+                   x: x,
+                   y: y,
+                   width: w,
+                   height: h,
+               };
     }
 
     pub fn area(&self) -> T {
@@ -35,12 +35,12 @@ impl<T: GeoScalar> Rect<T> {
     }
 
     pub fn contains(&self, p: &Point<T>) -> bool {
-        if self.x <= p.x && p.x < self.x + self.width
-            && self.y <= p.y && p.y < self.y + self.height {
-                return true;
-            } else {
-                return false;
-            }
+        if self.x <= p.x && p.x < self.x + self.width && self.y <= p.y &&
+           p.y < self.y + self.height {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     pub fn intersect(&self, r: &Rect<T>) -> Rect<T> {
@@ -58,8 +58,12 @@ impl<T: GeoScalar> Rect<T> {
 
 impl<T: GeoScalar> fmt::Display for Rect<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "[{}, {}, {}, {}]", self.x, self.y,
-               self.width, self.height)
+        write!(f,
+               "[{}, {}, {}, {}]",
+               self.x,
+               self.y,
+               self.width,
+               self.height)
     }
 }
 
@@ -75,4 +79,3 @@ mod test {
         assert_eq!(out, Rect::new(2f32, 3f32, 4f32, 4f32));
     }
 }
-

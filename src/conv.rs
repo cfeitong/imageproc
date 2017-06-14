@@ -20,8 +20,7 @@ pub fn conv1d<T: Primitive>(row: &[T], out: &mut [f32], kernel: &[f32]) {
     }
 }
 
-pub fn conv2d_sep<T: Pixel>(src: &Image<T>, kernelx: &[f32], kernely: &[f32]) -> Image<T> 
-{
+pub fn conv2d_sep<T: Pixel>(src: &Image<T>, kernelx: &[f32], kernely: &[f32]) -> Image<T> {
     let mut dst: Image<T> = Image::new(src.width(), src.height());
     let height = src.height();
     let width = src.width();
@@ -37,7 +36,9 @@ pub fn conv2d_sep<T: Pixel>(src: &Image<T>, kernelx: &[f32], kernely: &[f32]) ->
             let yy = y as i32 - kernely.len() as i32 / 2 + i as i32;
             row_off[i] = clip(yy, 0, height as i32 - 1) as u32;
         }
-        unsafe { ptr::write_bytes(tmp.as_mut_ptr(), 0, tmpsz); }
+        unsafe {
+            ptr::write_bytes(tmp.as_mut_ptr(), 0, tmpsz);
+        }
         for x in 0..width {
             let tx = (x as usize + hkxw) * channels;
             for i in 0..kernely.len() {
@@ -89,12 +90,16 @@ fn gaussian_kernel(w: usize, sigma: f32) -> Vec<f32> {
         k[i] = k[w - i - 1];
     }
     let mut s = 0f32;
-    for i in 0..w { s += k[i]; }
-    for i in 0..w { k[i] /= s; }
+    for i in 0..w {
+        s += k[i];
+    }
+    for i in 0..w {
+        k[i] /= s;
+    }
     k
 }
 
-pub fn gaussian_blur<T: Pixel>(src: &Image<T>, kernel_width :usize, sigma: f32) -> Image<T> {
+pub fn gaussian_blur<T: Pixel>(src: &Image<T>, kernel_width: usize, sigma: f32) -> Image<T> {
     assert!(kernel_width >= 1);
     let k = gaussian_kernel(kernel_width, sigma);
     conv2d_sep(src, &k, &k)
@@ -110,8 +115,8 @@ mod test {
 
     #[test]
     fn test_conv1d() {
-        let src: Vec<f32> = vec!(1.0, 1.0, 1.0, 2.0, 2.0, 2.0);
-        let kern: Vec<f32> = vec!(1.0, 2.0, 1.0);
+        let src: Vec<f32> = vec![1.0, 1.0, 1.0, 2.0, 2.0, 2.0];
+        let kern: Vec<f32> = vec![1.0, 2.0, 1.0];
         let res: Vec<f32> = vec![4.0, 4.0, 5.0, 7.0, 8.0, 8.0];
         let mut out = [0f32; 6];
         conv1d(&src, &mut out, &kern);
@@ -121,7 +126,7 @@ mod test {
     #[test]
     fn test_conv2d_sep() {
         let path = Path::new("./tests/cat.jpg");
-        let img: ImageBgra = FreeImageIO::from_path(&path).unwrap();
+        let img: ImageBGRA = FreeImageIO::from_path(&path).unwrap();
 
         let out = gaussian_blur(&img, 11, 0f32);
 
@@ -129,4 +134,3 @@ mod test {
         FreeImageIO::save(&target, &out).unwrap();
     }
 }
-

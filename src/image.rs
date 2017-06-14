@@ -21,7 +21,7 @@ pub struct Color<T: Primitive> {
     b: T,
     g: T,
     r: T,
-    a: T
+    a: T,
 }
 
 impl<T: Primitive> Color<T> {
@@ -39,7 +39,7 @@ impl<T: Primitive> Color<T> {
             b: gray,
             g: gray,
             r: gray,
-            a: T::max_value()
+            a: T::max_value(),
         }
     }
 
@@ -63,7 +63,7 @@ pub trait Pixel: Copy + Clone + Index<usize> {
     fn channels() -> usize;
 
     /// Returns the bits per pixel
-    fn bits_per_pixel() -> u8;
+    fn bits_per_pixel() -> usize;
 
     /// Returns the components as a slice.
     fn raw(&self) -> &[Self::Subpixel];
@@ -123,7 +123,7 @@ impl<T: Primitive> Pixel for $ident<T> {
     }
 
     #[inline]
-    fn bits_per_pixel() -> u8 {
+    fn bits_per_pixel() -> usize {
         8 * $channels
     }
 
@@ -262,10 +262,10 @@ impl<T: Primitive, U: Primitive> Mul<U> for $ident<T> {
 }
 
 define_colors! {
-    Bgr, 3, "BGR", #[doc = "RGB colors"];
+    BGR, 3, "BGR", #[doc = "RGB colors"];
     Gray, 1, "Y", #[doc = "Grayscale colors"];
-    Bgra, 4, "BGRA", #[doc = "BGR colors + alpha channel"];
-    Rgba, 4, "RGBA", #[doc = "RGB colors + alpha channel"];
+    BGRA, 4, "BGRA", #[doc = "BGR colors + alpha channel"];
+    RGBA, 4, "RGBA", #[doc = "RGB colors + alpha channel"];
 }
 
 pub trait AlphaPixel: Pixel {
@@ -282,8 +282,8 @@ impl<T: Primitive> AlphaPixel for $t<T> {
     );
 );
 
-define_alpha!(Bgra, 3);
-define_alpha!(Rgba, 3);
+define_alpha!(BGRA, 3);
+define_alpha!(RGBA, 3);
 
 pub trait RGBPixel: Pixel {
     fn red_index() -> usize;
@@ -307,9 +307,9 @@ impl<T: Primitive> RGBPixel for $t<T> {
     );
 );
 
-define_rgb!(Bgr, 2, 1, 0);
-define_rgb!(Bgra, 2, 1, 0);
-define_rgb!(Rgba, 0, 1, 2);
+define_rgb!(BGR, 2, 1, 0);
+define_rgb!(BGRA, 2, 1, 0);
+define_rgb!(RGBA, 0, 1, 2);
 
 macro_rules! define_saturating(
     ($t:ident) => (
@@ -333,8 +333,8 @@ impl<T: Primitive + Saturating> Saturating for $t<T> {
 );
 
 define_saturating!(Gray);
-define_saturating!(Bgr);
-define_saturating!(Bgra);
+define_saturating!(BGR);
+define_saturating!(BGRA);
 
 pub trait GenericImage {
     type Pixel: Pixel;
@@ -345,7 +345,7 @@ pub struct Image<T: Pixel> {
     w: u32,
     h: u32,
     stride: u32, //stride in sizeof(T)
-    data: Vec<T>
+    data: Vec<T>,
 }
 
 impl<T: Pixel> GenericImage for Image<T> {
@@ -357,29 +357,41 @@ impl<T: Pixel> Image<T> {
         // fast allocation without initization
         let len = (width as usize) * (height as usize);
         let mut data: Vec<T> = Vec::with_capacity(len);
-        unsafe { data.set_len(len); }
+        unsafe {
+            data.set_len(len);
+        }
         Image {
             w: width,
             h: height,
             stride: width,
-            data: data
+            data: data,
         }
     }
 
     #[inline]
-    pub fn width(&self) -> u32 { self.w }
+    pub fn width(&self) -> u32 {
+        self.w
+    }
 
     #[inline]
-    pub fn height(&self) -> u32 { self.h }
+    pub fn height(&self) -> u32 {
+        self.h
+    }
 
     #[inline]
-    pub fn size(&self) -> (u32, u32) { (self.w, self.h) }
+    pub fn size(&self) -> (u32, u32) {
+        (self.w, self.h)
+    }
 
     #[inline]
-    pub fn stride(&self) -> u32 {self.stride }
+    pub fn stride(&self) -> u32 {
+        self.stride
+    }
 
     #[inline]
-    pub fn pitch(&self) -> u32 { self.stride * (self.bits_per_pixel() / 8) as u32 }
+    pub fn pitch(&self) -> u32 {
+        self.stride * (self.bits_per_pixel() / 8) as u32
+    }
 
     #[inline]
     pub fn pixels(&self) -> &[T] {
@@ -407,7 +419,7 @@ impl<T: Pixel> Image<T> {
     }
 
     #[inline]
-    pub fn bits_per_pixel(&self) -> u8 {
+    pub fn bits_per_pixel(&self) -> usize {
         T::bits_per_pixel()
     }
 
@@ -419,13 +431,13 @@ impl<T: Pixel> Image<T> {
     #[inline]
     pub fn row(&self, r: u32) -> &[T] {
         let start = r * self.stride;
-        &self.data[start as usize .. (start + self.stride) as usize]
+        &self.data[start as usize..(start + self.stride) as usize]
     }
 
     #[inline]
     pub fn row_mut(&mut self, r: u32) -> &mut [T] {
         let start = r * self.stride;
-        &mut self.data[start as usize .. (start + self.stride) as usize]
+        &mut self.data[start as usize..(start + self.stride) as usize]
     }
 
     pub fn fill(&mut self, v: &T) {
@@ -450,7 +462,7 @@ impl<T: Pixel> Image<T> {
             image: &self,
             row: self.row(0),
             y: 0,
-            x: 0
+            x: 0,
         }
     }
 
@@ -458,7 +470,7 @@ impl<T: Pixel> Image<T> {
         ImageMutIterator {
             image: self,
             y: 0,
-            x: 0
+            x: 0,
         }
     }
     //pub fn crop(&self, rect: &Rect) -> Result<Image<T>, ImageError> {
@@ -471,15 +483,14 @@ pub trait AlphaImage {
 
 impl<T: AlphaPixel> AlphaImage for Image<T> {
     fn set_alpha(&mut self) {
-        self.fill_channel(T::alpha_index(),
-            T::Subpixel::max_value());
+        self.fill_channel(T::alpha_index(), T::Subpixel::max_value());
     }
 }
 
 impl<T: Pixel> Drop for Image<T> {
-        fn drop(&mut self) {
-            self.data.clear();
-        }
+    fn drop(&mut self) {
+        self.data.clear();
+    }
 }
 
 impl<T: Pixel> Clone for Image<T> {
@@ -515,12 +526,12 @@ impl<T: Pixel> IndexMut<(u32, u32)> for Image<T> {
 
 
 pub type ImageGray = Image<Gray<u8>>;
-pub type ImageBgr = Image<Bgr<u8>>;
-pub type ImageBgra = Image<Bgra<u8>>;
+pub type ImageBGR = Image<BGR<u8>>;
+pub type ImageBGRA = Image<BGRA<u8>>;
 
 pub type ImageGrayf = Image<Gray<f32>>;
-pub type ImageBgrf = Image<Bgr<f32>>;
-pub type ImageBgraf = Image<Bgra<f32>>;
+pub type ImageBGRf = Image<BGR<f32>>;
+pub type ImageBGRAf = Image<BGRA<f32>>;
 
 pub struct ImageIterator<'a, P>
     where P: Pixel + 'a,
@@ -530,13 +541,13 @@ pub struct ImageIterator<'a, P>
     image: &'a Image<P>,
     row: &'a [P],
     y: u32,
-    x: u32
+    x: u32,
 }
 
-impl<'a, P> Iterator for ImageIterator<'a, P> 
+impl<'a, P> Iterator for ImageIterator<'a, P>
     where P: Pixel + 'a,
           <P as Index<usize>>::Output: 'a,
-          P::Subpixel: 'a,
+          P::Subpixel: 'a
 {
     type Item = (u32, u32, &'a P);
     #[inline]
@@ -548,7 +559,7 @@ impl<'a, P> Iterator for ImageIterator<'a, P>
             } else {
                 self.row = self.image.row(self.y);
             }
-            self.x  = 0;
+            self.x = 0;
         }
         let (x, y) = (self.x, self.y);
         self.x += 1;
@@ -563,20 +574,20 @@ pub struct ImageMutIterator<'a, P>
 {
     image: &'a mut Image<P>,
     y: u32,
-    x: u32
+    x: u32,
 }
 
-impl<'a, P> Iterator for ImageMutIterator<'a, P> 
+impl<'a, P> Iterator for ImageMutIterator<'a, P>
     where P: Pixel + 'a,
           <P as Index<usize>>::Output: 'a,
-          P::Subpixel: 'a,
+          P::Subpixel: 'a
 {
     type Item = (u32, u32, &'a mut P);
     #[inline]
     fn next(&mut self) -> Option<(u32, u32, &'a mut P)> {
         if self.x >= self.image.width() {
             self.y += 1;
-            self.x  = 0;
+            self.x = 0;
         }
         if self.y >= self.image.height() {
             return None;
@@ -600,14 +611,14 @@ mod test {
 
     #[test]
     fn test_pixel_size() {
-        assert_eq!(mem::size_of::<Bgra<u8>>(), 4);
-        assert_eq!(mem::size_of::<Bgr<u8>>(), 3);
+        assert_eq!(mem::size_of::<BGRA<u8>>(), 4);
+        assert_eq!(mem::size_of::<BGR<u8>>(), 3);
         assert_eq!(mem::size_of::<Gray<u8>>(), 1);
     }
 
     #[test]
     fn test_alloc() {
-        let img = ImageBgra::new(100, 200);
+        let img = ImageBGRA::new(100, 200);
         assert_eq!(img.channels(), 4);
         assert_eq!(img.bits_per_pixel(), 4 * 8);
         assert_eq!(img.pixels().len(), 100 * 200);
@@ -617,23 +628,22 @@ mod test {
 
     #[test]
     fn test_iter() {
-        let mut img = ImageBgra::new(10, 5);
+        let mut img = ImageBGRA::new(10, 5);
         for (_, _, p) in img.iter_mut() {
-            *p = Bgra::<u8>([128, 128, 0, 0]);
+            *p = BGRA::<u8>([128, 128, 0, 0]);
         }
 
         for (_, _, p) in img.iter() {
-            assert_eq!(*p, Bgra::<u8>([128, 128, 0, 0]));
+            assert_eq!(*p, BGRA::<u8>([128, 128, 0, 0]));
         }
     }
 
     #[test]
     fn test_traits() {
-        let mut img = ImageBgra::new(10, 5);
+        let mut img = ImageBGRA::new(10, 5);
         for (_, _, p) in img.iter_mut() {
-            *p = *p + Bgra::<u8>([128, 128, 0, 0]);
+            *p = *p + BGRA::<u8>([128, 128, 0, 0]);
         }
     }
 
 }
-

@@ -22,4 +22,3 @@ pub fn clip<T: Primitive>(x: T, min: T, max: T) -> T {
     }
     x
 }
-

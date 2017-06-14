@@ -1,14 +1,14 @@
 use std::fmt::Display;
 use std::ops::{Neg, Mul, Div};
 use std::cmp::{min, max};
-use num::{ Bounded, Num, NumCast };
+use num::{Bounded, Num, NumCast};
 
 pub trait NumMinMax {
     fn min(self, other: Self) -> Self;
     fn max(self, other: Self) -> Self;
 }
 
-pub trait GeoScalar: Copy + NumCast + Num 
+pub trait GeoScalar: Copy + NumCast + Num
     + PartialOrd<Self> + Clone + Bounded
     + Display + Neg + Mul + Div + NumMinMax {
 }
@@ -48,4 +48,3 @@ define_scalar_int!(i32);
 define_scalar_int!(i64);
 define_scalar_float!(f32);
 define_scalar_float!(f64);
-
