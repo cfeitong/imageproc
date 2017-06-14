@@ -1,0 +1,285 @@
+   Compiling imageproc v0.1.0 (file:///Users/cfeitong/code/extern/imageproc)
+error: linking with `cc` failed: exit code: 1
+  |
+  = note: "cc" "-m64" "-L" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/imageproc-cd0d6a1645616b0f.0.o" "-o" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/imageproc-cd0d6a1645616b0f" "-Wl,-dead_strip" "-nodefaultlibs" "-L" "/Users/cfeitong/code/extern/imageproc/target/debug/deps" "-L" "/Users/cfeitong/code/extern/imageproc/3rdparty/FreeImage/Dist" "-L" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib" "-Wl,-force_load,/Users/cfeitong/code/extern/imageproc/3rdparty/FreeImage/Dist/libfreeimage.a" "-l" "stdc++" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/libnum-031aff75c38d8f9c.rlib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/libnum_iter-b399bbd189e5f67b.rlib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/libnum_rational-425879638dc36b28.rlib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/libnum_bigint-45c792512cec32c2.rlib" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib/libtest-3e26ba5b73489a7a.rlib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/libnalgebra-35ee82d3b897df31.rlib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/librand-76456d761c2cb637.rlib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/libgeneric_array-f9645bb8f4a48e1f.rlib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/libtypenum-0fb9f8bc28ce6250.rlib" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib/libgetopts-99a2b16b9c99ae52.rlib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/libnum_integer-dad7e7932a5f6c81.rlib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/liblibc-496b028781a2b35b.rlib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/libalga-965885346ee8e79e.rlib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/libapprox-d684018f72847872.rlib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/libnum_complex-783eb5b936143d56.rlib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/librustc_serialize-d05828e9f8a2cc23.rlib" "/Users/cfeitong/code/extern/imageproc/target/debug/deps/libnum_traits-32c57ec3799391e2.rlib" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib/libterm-f7d88559a398de33.rlib" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib/libstd-438eba4cd7d88a45.rlib" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib/libpanic_unwind-00160610bfa2c7b4.rlib" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib/libunwind-88eece318c5ccb15.rlib" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib/librand-646fe8114e6965a2.rlib" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib/libcollections-7d6da376f6405c93.rlib" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib/liballoc-ab03bba0be78edaa.rlib" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib/liballoc_jemalloc-3d46a711e5badb84.rlib" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib/liblibc-31c7158cd96c571c.rlib" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib/libstd_unicode-a732f07ce6fa7392.rlib" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib/libcore-ee2a935baf6741f5.rlib" "/Users/cfeitong/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-apple-darwin/lib/libcompiler_builtins-53f5ee584666574a.rlib" "-l" "System" "-l" "resolv" "-l" "pthread" "-l" "c" "-l" "m"
+  = note: Undefined symbols for architecture x86_64:
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::replace(unsigned long, unsigned long, char const*, unsigned long)", referenced from:
+                Iex_2_2::throwErrnoExc(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, int) in libfreeimage.a(IexThrowErrnoExc.o)
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::assign(char const*, unsigned long)", referenced from:
+                Iex_2_2::BaseExc::assign(std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >&) in libfreeimage.a(IexBaseExc.o)
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::basic_string(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)", referenced from:
+                Iex_2_2::BaseExc::BaseExc(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libfreeimage.a(IexBaseExc.o)
+                Iex_2_2::BaseExc::BaseExc(std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >&) in libfreeimage.a(IexBaseExc.o)
+            "std::__1::__basic_string_common<true>::__throw_length_error() const", referenced from:
+                std::__1::enable_if<__is_forward_iterator<char*>::value, void>::type std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::__init<char*>(char*, char*) in libfreeimage.a(FIRational.o)
+            "std::__1::basic_ostream<char, std::__1::char_traits<char> >::~basic_ostream()", referenced from:
+                std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_ostringstream() in libfreeimage.a(FIRational.o)
+                Imf_2_2::StdOSStream::StdOSStream() in libfreeimage.a(ImfStdIO.o)
+            "std::bad_alloc::bad_alloc()", referenced from:
+                psdParser::ReadImageData(FreeImageIO*, void*) in libfreeimage.a(PSDParser.o)
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::append(unsigned long, char)", referenced from:
+                Load(FreeImageIO*, void*, int, int, void*) in libfreeimage.a(PluginGIF.o)
+            "typeinfo for std::__1::basic_streambuf<char, std::__1::char_traits<char> >", referenced from:
+                typeinfo for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::imbue(std::__1::locale const&)", referenced from:
+                vtable for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::setbuf(char*, long)", referenced from:
+                vtable for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_ostream<char, std::__1::char_traits<char> >::~basic_ostream()", referenced from:
+                construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+                construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(FIRational.o)
+            "virtual thunk to std::__1::basic_ostream<char, std::__1::char_traits<char> >::~basic_ostream()", referenced from:
+                construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+                construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(FIRational.o)
+            "virtual thunk to std::__1::basic_istream<char, std::__1::char_traits<char> >::~basic_istream()", referenced from:
+                construction vtable for std::__1::basic_istream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_ostream<char, std::__1::char_traits<char> >::operator<<(unsigned long)", referenced from:
+                void Imf_2_2::(anonymous namespace)::checkIsNullTerminated<256ul>(char const (&) [256ul], char const*) in libfreeimage.a(ImfChannelListAttribute.o)
+                Imf_2_2::(anonymous namespace)::readSampleCountForLineBlock(Imf_2_2::InputStreamMutex*, Imf_2_2::DeepScanLineInputFile::Data*, int) in libfreeimage.a(ImfDeepScanLineInputFile.o)
+                Imf_2_2::(anonymous namespace)::readPixelData(Imf_2_2::InputStreamMutex*, Imf_2_2::DeepScanLineInputFile::Data*, int, char*&, unsigned long&, unsigned long&) in libfreeimage.a(ImfDeepScanLineInputFile.o)
+                Imf_2_2::Header::sanityCheck(bool, bool) const in libfreeimage.a(ImfHeader.o)
+                void Imf_2_2::(anonymous namespace)::checkIsNullTerminated<256ul>(char const (&) [256ul], char const*) in libfreeimage.a(ImfHeader.o)
+            "vtable for std::__1::ios_base", referenced from:
+                Load(FreeImageIO*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                Save(FreeImageIO*, FIBITMAP*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                SaveAsEXR_LC(C_OStream&, FIBITMAP*, Imf_2_2::Header&, int, int) in libfreeimage.a(PluginEXR.o)
+                Imf_2_2::Attribute::registerAttributeType(char const*, Imf_2_2::Attribute* (*)()) in libfreeimage.a(ImfAttribute.o)
+                Imf_2_2::Attribute::newAttribute(char const*) in libfreeimage.a(ImfAttribute.o)
+                Imf_2_2::ChannelList::insert(char const*, Imf_2_2::Channel const&) in libfreeimage.a(ImfChannelList.o)
+                void Imf_2_2::(anonymous namespace)::checkIsNullTerminated<256ul>(char const (&) [256ul], char const*) in libfreeimage.a(ImfChannelListAttribute.o)
+                ...
+            NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+            "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::xsputn(char const*, long)", referenced from:
+                vtable for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::rfind(char, unsigned long) const", referenced from:
+                Imf_2_2::DwaCompressor::relevantChannelRules(std::__1::vector<Imf_2_2::DwaCompressor::Classifier, std::__1::allocator<Imf_2_2::DwaCompressor::Classifier> >&) const in libfreeimage.a(ImfDwaCompressor.o)
+                Imf_2_2::DwaCompressor::classifyChannels(Imf_2_2::ChannelList, std::__1::vector<Imf_2_2::DwaCompressor::ChannelData, std::__1::allocator<Imf_2_2::DwaCompressor::ChannelData> >&, std::__1::vector<Imf_2_2::DwaCompressor::CscChannelSet, std::__1::allocator<Imf_2_2::DwaCompressor::CscChannelSet> >&) in libfreeimage.a(ImfDwaCompressor.o)
+            "virtual thunk to std::__1::basic_istream<char, std::__1::char_traits<char> >::~basic_istream()", referenced from:
+                construction vtable for std::__1::basic_istream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::ios_base::clear(unsigned int)", referenced from:
+                std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libfreeimage.a(PluginEXR.o)
+                Imf_2_2::StdOSStream::seekp(unsigned long) in libfreeimage.a(ImfStdIO.o)
+            "std::__1::basic_istream<char, std::__1::char_traits<char> >::~basic_istream()", referenced from:
+                construction vtable for std::__1::basic_istream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_ostream<char, std::__1::char_traits<char> >::sentry::sentry(std::__1::basic_ostream<char, std::__1::char_traits<char> >&)", referenced from:
+                std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libfreeimage.a(PluginEXR.o)
+                Imf_2_2::StdOSStream::seekp(unsigned long) in libfreeimage.a(ImfStdIO.o)
+            "std::__1::basic_iostream<char, std::__1::char_traits<char> >::~basic_iostream()", referenced from:
+                construction vtable for std::__1::basic_iostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "non-virtual thunk to std::__1::basic_iostream<char, std::__1::char_traits<char> >::~basic_iostream()", referenced from:
+                construction vtable for std::__1::basic_iostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "typeinfo for std::__1::basic_iostream<char, std::__1::char_traits<char> >", referenced from:
+                construction vtable for std::__1::basic_iostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+                typeinfo for std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_iostream<char, std::__1::char_traits<char> >::~basic_iostream()", referenced from:
+                construction vtable for std::__1::basic_iostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "virtual thunk to std::__1::basic_iostream<char, std::__1::char_traits<char> >::~basic_iostream()", referenced from:
+                construction vtable for std::__1::basic_iostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_ostream<char, std::__1::char_traits<char> >::sentry::~sentry()", referenced from:
+                std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libfreeimage.a(PluginEXR.o)
+                Imf_2_2::StdOSStream::seekp(unsigned long) in libfreeimage.a(ImfStdIO.o)
+            "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::xsgetn(char*, long)", referenced from:
+                vtable for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::ios_base::getloc() const", referenced from:
+                std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libfreeimage.a(PluginEXR.o)
+            "std::__1::ios_base::__set_badbit_and_consider_rethrow()", referenced from:
+                std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::showmanyc()", referenced from:
+                vtable for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::append(char const*)", referenced from:
+                Load(FreeImageIO*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                _read_iptc_profile in libfreeimage.a(IPTC.o)
+            "virtual thunk to std::__1::basic_iostream<char, std::__1::char_traits<char> >::~basic_iostream()", referenced from:
+                construction vtable for std::__1::basic_iostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::__vector_base_common<true>::__throw_length_error() const", referenced from:
+                void std::__1::vector<unsigned long, std::__1::allocator<unsigned long> >::__push_back_slow_path<unsigned long const>(unsigned long const&) in libfreeimage.a(PluginGIF.o)
+                void std::__1::vector<PageInfo, std::__1::allocator<PageInfo> >::__push_back_slow_path<PageInfo const>(PageInfo const&) in libfreeimage.a(PluginGIF.o)
+                void std::__1::vector<FIBITMAP*, std::__1::allocator<FIBITMAP*> >::__push_back_slow_path<FIBITMAP* const>(FIBITMAP* const&) in libfreeimage.a(PluginICO.o)
+                std::__1::vector<float, std::__1::allocator<float> >::allocate(unsigned long) in libfreeimage.a(tmoColorConvert.o)
+                void std::__1::vector<FITAG*, std::__1::allocator<FITAG*> >::__push_back_slow_path<FITAG* const>(FITAG* const&) in libfreeimage.a(Exif.o)
+                void std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >::__push_back_slow_path<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const>(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libfreeimage.a(IPTC.o)
+                std::__1::vector<float const*, std::__1::allocator<float const*> >::allocate(unsigned long) in libfreeimage.a(ImfCompositeDeepScanLine.o)
+                ...
+            "std::__1::locale::use_facet(std::__1::locale::id&) const", referenced from:
+                std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_string()", referenced from:
+                _FreeImage_Clone in libfreeimage.a(BitmapAccess.o)
+                std::__1::map<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, FITAG*, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, FITAG*> > >::operator[](std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libfreeimage.a(BitmapAccess.o)
+                _FreeImage_GetMetadata in libfreeimage.a(BitmapAccess.o)
+                _FreeImage_CloneMetadata in libfreeimage.a(BitmapAccess.o)
+                _FreeImage_SetMetadata in libfreeimage.a(BitmapAccess.o)
+                std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, FITAG*>::~pair() in libfreeimage.a(BitmapAccess.o)
+                std::__1::map<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, FITAG*, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, FITAG*> > >::__construct_node_with_key(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libfreeimage.a(BitmapAccess.o)
+                ...
+            "std::__1::ctype<char>::id", referenced from:
+                std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libfreeimage.a(PluginEXR.o)
+            "std::__1::locale::~locale()", referenced from:
+                std::__1::basic_ostream<char, std::__1::char_traits<char> >& std::__1::__put_character_sequence<char, std::__1::char_traits<char> >(std::__1::basic_ostream<char, std::__1::char_traits<char> >&, char const*, unsigned long) in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::basic_streambuf()", referenced from:
+                Load(FreeImageIO*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                Save(FreeImageIO*, FIBITMAP*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                SaveAsEXR_LC(C_OStream&, FIBITMAP*, Imf_2_2::Header&, int, int) in libfreeimage.a(PluginEXR.o)
+                Imf_2_2::Attribute::registerAttributeType(char const*, Imf_2_2::Attribute* (*)()) in libfreeimage.a(ImfAttribute.o)
+                Imf_2_2::Attribute::newAttribute(char const*) in libfreeimage.a(ImfAttribute.o)
+                Imf_2_2::ChannelList::insert(char const*, Imf_2_2::Channel const&) in libfreeimage.a(ImfChannelList.o)
+                void Imf_2_2::(anonymous namespace)::checkIsNullTerminated<256ul>(char const (&) [256ul], char const*) in libfreeimage.a(ImfChannelListAttribute.o)
+                ...
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::__init(unsigned long, char)", referenced from:
+                std::__1::ostreambuf_iterator<char, std::__1::char_traits<char> > std::__1::__pad_and_output<char, std::__1::char_traits<char> >(std::__1::ostreambuf_iterator<char, std::__1::char_traits<char> >, char const*, char const*, char const*, std::__1::ios_base&, char) in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::push_back(char)", referenced from:
+                std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> >::overflow(int) in libfreeimage.a(PluginEXR.o)
+                std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > std::__1::operator+<char, std::__1::char_traits<char>, std::__1::allocator<char> >(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, char) in libfreeimage.a(PluginGIF.o)
+                ReadString(FreeImageIO*, void*) in libfreeimage.a(PluginXPM.o)
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::resize(unsigned long, char)", referenced from:
+                std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> >::str(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libfreeimage.a(PluginEXR.o)
+                std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> >::overflow(int) in libfreeimage.a(PluginEXR.o)
+                StringTable::ClearDecompressorTable() in libfreeimage.a(PluginGIF.o)
+                Imf_2_2::TypedAttribute<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >::readValueFrom(Imf_2_2::IStream&, int, int) in libfreeimage.a(ImfStringAttribute.o)
+                Imf_2_2::TypedAttribute<std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >::readValueFrom(Imf_2_2::IStream&, int, int) in libfreeimage.a(ImfStringVectorAttribute.o)
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::__init(char const*, unsigned long, unsigned long)", referenced from:
+                std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > std::__1::operator+<char, std::__1::char_traits<char>, std::__1::allocator<char> >(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, char const*) in libfreeimage.a(PluginEXR.o)
+                std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > std::__1::operator+<char, std::__1::char_traits<char>, std::__1::allocator<char> >(char const*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libfreeimage.a(PluginEXR.o)
+                std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > std::__1::operator+<char, std::__1::char_traits<char>, std::__1::allocator<char> >(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, char) in libfreeimage.a(PluginGIF.o)
+                std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > std::__1::operator+<char, std::__1::char_traits<char>, std::__1::allocator<char> >(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libfreeimage.a(ImfHeader.o)
+            "std::__1::basic_ostream<char, std::__1::char_traits<char> >::~basic_ostream()", referenced from:
+                construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+                construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(FIRational.o)
+            "typeinfo for std::__1::basic_istream<char, std::__1::char_traits<char> >", referenced from:
+                construction vtable for std::__1::basic_istream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::append(char const*, unsigned long)", referenced from:
+                std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > std::__1::operator+<char, std::__1::char_traits<char>, std::__1::allocator<char> >(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, char const*) in libfreeimage.a(PluginEXR.o)
+                std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > std::__1::operator+<char, std::__1::char_traits<char>, std::__1::allocator<char> >(char const*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libfreeimage.a(PluginEXR.o)
+                Load(FreeImageIO*, void*, int, int, void*) in libfreeimage.a(PluginGIF.o)
+                LibRaw_freeimage_datastream::scanf_one(char const*, void*) in libfreeimage.a(PluginRAW.o)
+                std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > std::__1::operator+<char, std::__1::char_traits<char>, std::__1::allocator<char> >(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libfreeimage.a(ImfHeader.o)
+                Imf_2_2::MultiPartInputFile::initialize() in libfreeimage.a(ImfMultiPartInputFile.o)
+            "vtable for std::__1::basic_ios<char, std::__1::char_traits<char> >", referenced from:
+                Load(FreeImageIO*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                Save(FreeImageIO*, FIBITMAP*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                SaveAsEXR_LC(C_OStream&, FIBITMAP*, Imf_2_2::Header&, int, int) in libfreeimage.a(PluginEXR.o)
+                Imf_2_2::Attribute::registerAttributeType(char const*, Imf_2_2::Attribute* (*)()) in libfreeimage.a(ImfAttribute.o)
+                Imf_2_2::Attribute::newAttribute(char const*) in libfreeimage.a(ImfAttribute.o)
+                Imf_2_2::ChannelList::insert(char const*, Imf_2_2::Channel const&) in libfreeimage.a(ImfChannelList.o)
+                void Imf_2_2::(anonymous namespace)::checkIsNullTerminated<256ul>(char const (&) [256ul], char const*) in libfreeimage.a(ImfChannelListAttribute.o)
+                ...
+            NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::basic_string(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)", referenced from:
+                _FreeImage_Clone in libfreeimage.a(BitmapAccess.o)
+                _FreeImage_CloneMetadata in libfreeimage.a(BitmapAccess.o)
+                std::__1::map<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, FITAG*, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, FITAG*> > >::__construct_node_with_key(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libfreeimage.a(BitmapAccess.o)
+                mng_ReadChunks(int, FreeImageIO*, void*, long, int) in libfreeimage.a(MNGHelper.o)
+                std::__1::map<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >::__construct_node_with_key(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libfreeimage.a(MNGHelper.o)
+                std::__1::map<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, tagFILE_RGBA, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, tagFILE_RGBA> > >::__construct_node_with_key(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libfreeimage.a(PluginXPM.o)
+                _write_iptc_profile in libfreeimage.a(IPTC.o)
+                ...
+            "typeinfo for std::__1::basic_ostream<char, std::__1::char_traits<char> >", referenced from:
+                construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+                construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(FIRational.o)
+                typeinfo for std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(FIRational.o)
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::operator=(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)", referenced from:
+                mng_SetMetadata_tEXt(std::__1::map<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >&, unsigned char const*, unsigned int) in libfreeimage.a(MNGHelper.o)
+                std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> >::str(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libfreeimage.a(PluginEXR.o)
+                StringTable::Decompress(unsigned char*, int*) in libfreeimage.a(PluginGIF.o)
+                Save(FreeImageIO*, FIBITMAP*, void*, int, int, void*) in libfreeimage.a(PluginXPM.o)
+                Imf_2_2::TypedAttribute<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >::copyValueFrom(Imf_2_2::Attribute const&) in libfreeimage.a(ImfCRgbaFile.o)
+                Imf_2_2::DwaCompressor::relevantChannelRules(std::__1::vector<Imf_2_2::DwaCompressor::Classifier, std::__1::allocator<Imf_2_2::DwaCompressor::Classifier> >&) const in libfreeimage.a(ImfDwaCompressor.o)
+                Imf_2_2::DwaCompressor::classifyChannels(Imf_2_2::ChannelList, std::__1::vector<Imf_2_2::DwaCompressor::ChannelData, std::__1::allocator<Imf_2_2::DwaCompressor::ChannelData> >&, std::__1::vector<Imf_2_2::DwaCompressor::CscChannelSet, std::__1::allocator<Imf_2_2::DwaCompressor::CscChannelSet> >&) in libfreeimage.a(ImfDwaCompressor.o)
+                ...
+            "std::__1::basic_ostream<char, std::__1::char_traits<char> >::operator<<(int)", referenced from:
+                Imf_2_2::DeepScanLineInputFile::initialize(Imf_2_2::Header const&) in libfreeimage.a(ImfDeepScanLineInputFile.o)
+                Imf_2_2::(anonymous namespace)::readSampleCountForLineBlock(Imf_2_2::InputStreamMutex*, Imf_2_2::DeepScanLineInputFile::Data*, int) in libfreeimage.a(ImfDeepScanLineInputFile.o)
+                Imf_2_2::(anonymous namespace)::readPixelData(Imf_2_2::InputStreamMutex*, Imf_2_2::DeepScanLineInputFile::Data*, int, char*&, unsigned long&, unsigned long&) in libfreeimage.a(ImfDeepScanLineInputFile.o)
+                Imf_2_2::GenericInputFile::readMagicNumberAndVersionField(Imf_2_2::IStream&, int&) in libfreeimage.a(ImfGenericInputFile.o)
+                Imf_2_2::Header::sanityCheck(bool, bool) const in libfreeimage.a(ImfHeader.o)
+                Imf_2_2::(anonymous namespace)::readPixelData(Imf_2_2::InputStreamMutex*, Imf_2_2::ScanLineInputFile::Data*, int, char*&, int&) in libfreeimage.a(ImfScanLineInputFile.o)
+                Imf_2_2::TiledInputFile::readTiles(int, int, int, int, int, int) in libfreeimage.a(ImfTiledInputFile.o)
+                ...
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::compare(char const*) const", referenced from:
+                Imf_2_2::CompositeDeepScanLine::Data::check_valid(Imf_2_2::Header const&) in libfreeimage.a(ImfCompositeDeepScanLine.o)
+                Imf_2_2::CompositeDeepScanLine::setFrameBuffer(Imf_2_2::FrameBuffer const&) in libfreeimage.a(ImfCompositeDeepScanLine.o)
+                Imf_2_2::Header::sanityCheck(bool, bool) const in libfreeimage.a(ImfHeader.o)
+            "std::__1::ios_base::init(void*)", referenced from:
+                Load(FreeImageIO*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                Save(FreeImageIO*, FIBITMAP*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                SaveAsEXR_LC(C_OStream&, FIBITMAP*, Imf_2_2::Header&, int, int) in libfreeimage.a(PluginEXR.o)
+                Imf_2_2::Attribute::registerAttributeType(char const*, Imf_2_2::Attribute* (*)()) in libfreeimage.a(ImfAttribute.o)
+                Imf_2_2::Attribute::newAttribute(char const*) in libfreeimage.a(ImfAttribute.o)
+                Imf_2_2::ChannelList::insert(char const*, Imf_2_2::Channel const&) in libfreeimage.a(ImfChannelList.o)
+                void Imf_2_2::(anonymous namespace)::checkIsNullTerminated<256ul>(char const (&) [256ul], char const*) in libfreeimage.a(ImfChannelListAttribute.o)
+                ...
+            "std::__1::basic_istream<char, std::__1::char_traits<char> >::~basic_istream()", referenced from:
+                construction vtable for std::__1::basic_istream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_ostream<char, std::__1::char_traits<char> >::write(char const*, long)", referenced from:
+                Imf_2_2::StdOSStream::write(char const*, int) in libfreeimage.a(ImfStdIO.o)
+            "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::sync()", referenced from:
+                vtable for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "std::__1::basic_iostream<char, std::__1::char_traits<char> >::~basic_iostream()", referenced from:
+                Load(FreeImageIO*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                Save(FreeImageIO*, FIBITMAP*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libfreeimage.a(PluginEXR.o)
+                SaveAsEXR_LC(C_OStream&, FIBITMAP*, Imf_2_2::Header&, int, int) in libfreeimage.a(PluginEXR.o)
+                Imf_2_2::Attribute::registerAttributeType(char const*, Imf_2_2::Attribute* (*)()) in libfreeimage.a(ImfAttribute.o)
+                Imf_2_2::Attribute::newAttribute(char const*) in libfreeimage.a(ImfAttribute.o)
+                Imf_2_2::ChannelList::insert(char const*, Imf_2_2::Channel const&) in libfreeimage.a(ImfChannelList.o)
+                ...
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::__init(char const*, unsigned long)", referenced from:
+                _FreeImage_GetMetadata in libfreeimage.a(BitmapAccess.o)
+                _FreeImage_SetMetadata in libfreeimage.a(BitmapAccess.o)
+                Load(FreeImageIO*, void*, int, int, void*) in libfreeimage.a(PluginXPM.o)
+                Save(FreeImageIO*, FIBITMAP*, void*, int, int, void*) in libfreeimage.a(PluginXPM.o)
+                _write_iptc_profile in libfreeimage.a(IPTC.o)
+                Imf_2_2::CompositeDeepScanLine::Data::check_valid(Imf_2_2::Header const&) in libfreeimage.a(ImfCompositeDeepScanLine.o)
+                Imf_2_2::CompositeDeepScanLine::setFrameBuffer(Imf_2_2::FrameBuffer const&) in libfreeimage.a(ImfCompositeDeepScanLine.o)
+                ...
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::basic_string(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned long, unsigned long, std::__1::allocator<char> const&)", referenced from:
+                _write_iptc_profile in libfreeimage.a(IPTC.o)
+                Imf_2_2::DwaCompressor::relevantChannelRules(std::__1::vector<Imf_2_2::DwaCompressor::Classifier, std::__1::allocator<Imf_2_2::DwaCompressor::Classifier> >&) const in libfreeimage.a(ImfDwaCompressor.o)
+                Imf_2_2::DwaCompressor::classifyChannels(Imf_2_2::ChannelList, std::__1::vector<Imf_2_2::DwaCompressor::ChannelData, std::__1::allocator<Imf_2_2::DwaCompressor::ChannelData> >&, std::__1::vector<Imf_2_2::DwaCompressor::CscChannelSet, std::__1::allocator<Imf_2_2::DwaCompressor::CscChannelSet> >&) in libfreeimage.a(ImfDwaCompressor.o)
+            "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::~basic_streambuf()", referenced from:
+                Load(FreeImageIO*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                Save(FreeImageIO*, FIBITMAP*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringbuf() in libfreeimage.a(PluginEXR.o)
+                SaveAsEXR_LC(C_OStream&, FIBITMAP*, Imf_2_2::Header&, int, int) in libfreeimage.a(PluginEXR.o)
+                Imf_2_2::Attribute::registerAttributeType(char const*, Imf_2_2::Attribute* (*)()) in libfreeimage.a(ImfAttribute.o)
+                Imf_2_2::Attribute::newAttribute(char const*) in libfreeimage.a(ImfAttribute.o)
+                Imf_2_2::ChannelList::insert(char const*, Imf_2_2::Channel const&) in libfreeimage.a(ImfChannelList.o)
+                ...
+            "std::__1::basic_ios<char, std::__1::char_traits<char> >::~basic_ios()", referenced from:
+                Load(FreeImageIO*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                Save(FreeImageIO*, FIBITMAP*, void*, int, int, void*) in libfreeimage.a(PluginEXR.o)
+                std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_stringstream() in libfreeimage.a(PluginEXR.o)
+                SaveAsEXR_LC(C_OStream&, FIBITMAP*, Imf_2_2::Header&, int, int) in libfreeimage.a(PluginEXR.o)
+                std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_ostringstream() in libfreeimage.a(FIRational.o)
+                Imf_2_2::Attribute::registerAttributeType(char const*, Imf_2_2::Attribute* (*)()) in libfreeimage.a(ImfAttribute.o)
+                Imf_2_2::Attribute::newAttribute(char const*) in libfreeimage.a(ImfAttribute.o)
+                ...
+            "non-virtual thunk to std::__1::basic_iostream<char, std::__1::char_traits<char> >::~basic_iostream()", referenced from:
+                construction vtable for std::__1::basic_iostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+            "virtual thunk to std::__1::basic_ostream<char, std::__1::char_traits<char> >::~basic_ostream()", referenced from:
+                construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+                construction vtable for std::__1::basic_ostream<char, std::__1::char_traits<char> >-in-std::__1::basic_ostringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(FIRational.o)
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::~basic_string()", referenced from:
+                Iex_2_2::BaseExc::BaseExc(char const*) in libfreeimage.a(IexBaseExc.o)
+                Iex_2_2::BaseExc::BaseExc(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&) in libfreeimage.a(IexBaseExc.o)
+                Iex_2_2::BaseExc::BaseExc(std::__1::basic_stringstream<char, std::__1::char_traits<char>, std::__1::allocator<char> >&) in libfreeimage.a(IexBaseExc.o)
+                Iex_2_2::BaseExc::~BaseExc() in libfreeimage.a(IexBaseExc.o)
+            "std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >::assign(char const*)", referenced from:
+                mng_SetMetadata_tEXt(std::__1::map<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::less<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::pair<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > > >&, unsigned char const*, unsigned int) in libfreeimage.a(MNGHelper.o)
+                Imf_2_2::CompositeDeepScanLine::setFrameBuffer(Imf_2_2::FrameBuffer const&) in libfreeimage.a(ImfCompositeDeepScanLine.o)
+                Imf_2_2::(anonymous namespace)::newLineBufferTask(IlmThread_2_2::TaskGroup*, Imf_2_2::DeepScanLineInputFile::Data*, int, int, int) in libfreeimage.a(ImfDeepScanLineInputFile.o)
+                Imf_2_2::(anonymous namespace)::LineBufferTask::execute() in libfreeimage.a(ImfDeepScanLineInputFile.o)
+                Imf_2_2::(anonymous namespace)::LineBufferTask::execute() in libfreeimage.a(ImfOutputFile.o)
+                Imf_2_2::(anonymous namespace)::newLineBufferTask(IlmThread_2_2::TaskGroup*, Imf_2_2::InputStreamMutex*, Imf_2_2::ScanLineInputFile::Data*, int, int, int, Imf_2_2::OptimizationMode) in libfreeimage.a(ImfScanLineInputFile.o)
+                Imf_2_2::(anonymous namespace)::LineBufferTaskIIF::execute() in libfreeimage.a(ImfScanLineInputFile.o)
+                ...
+            "std::__1::basic_streambuf<char, std::__1::char_traits<char> >::uflow()", referenced from:
+                vtable for std::__1::basic_stringbuf<char, std::__1::char_traits<char>, std::__1::allocator<char> > in libfreeimage.a(PluginEXR.o)
+          ld: symbol(s) not found for architecture x86_64
+          clang: error: linker command failed with exit code 1 (use -v to see invocation)
+          
+
+error: aborting due to previous error(s)
+
+error: Could not compile `imageproc`.
+
+To learn more, run the command again with --verbose.
