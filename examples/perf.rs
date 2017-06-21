@@ -8,7 +8,6 @@ use time::PreciseTime;
 use imageproc::convert::*;
 use imageproc::transform;
 use imageproc::image::*;
-use imageproc::conv::*;
 use imageproc::imageio::{ImageIO, FreeImageIO};
 
 #[allow(unused_variables)]

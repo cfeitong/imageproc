@@ -1,3 +1,4 @@
+#![feature(inclusive_range_syntax)]
 #![warn(unused_qualifications)]
 #![allow(dead_code)]
 
@@ -12,6 +13,6 @@ pub mod convert;
 pub mod transform;
 pub mod geo;
 pub mod math;
-pub mod conv;
+pub mod op;
 
 pub use imageio::{ImageIO, FreeImageIO};

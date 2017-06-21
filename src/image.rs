@@ -3,6 +3,7 @@ use num::NumCast;
 use num::traits::{Saturating, Bounded};
 use std::ops::{Index, IndexMut};
 use std::ops::{Add, Sub, Mul};
+use std::fmt::Debug;
 
 use traits::Primitive;
 
@@ -51,7 +52,7 @@ impl<T: Primitive> Color<T> {
 pub const MAX_CHANNEL_COUNT: usize = 4;
 
 /// A pixel object is usually not used standalone but as a view into an image buffer.
-pub trait Pixel: Copy + Clone + Index<usize> {
+pub trait Pixel: Debug + Copy + Clone + Index<usize> {
     /// The underlying subpixel type.
     type Subpixel: Primitive;
 
@@ -217,41 +218,67 @@ impl<T: Primitive> Mul for $ident<T> {
     }
 }
 
-// Pixel * scalar
+// Pixel + scalar
 impl<T: Primitive, U: Primitive> Add<U> for $ident<T> {
-    type Output = $ident<U>;
+    type Output = $ident<T>;
 
     #[inline]
-    fn add(self, other: U) -> $ident<U> {
-        let mut m = [U::zero(); $channels];
+    fn add(self, other: U) -> $ident<T> {
+        let mut m = [T::zero(); $channels];
         for i in 0..$channels {
-            m[i] = U::from(self.data[i]).unwrap() + other;
+            let a = self.data[i].to_f32().unwrap();
+            let b = other.to_f32().unwrap();
+            m[i] = if T::max_value().to_f32().unwrap() < a+b {
+                T::max_value()
+            } else {
+                T::from(a + b).unwrap()
+            };
+
+            // m[i] = U::from(self.data[i]).unwrap() + other;
         }
         $ident(m)
     }
 }
 
+// Pixel - scalar
 impl<T: Primitive, U: Primitive> Sub<U> for $ident<T> {
-    type Output = $ident<U>;
+    type Output = $ident<T>;
 
     #[inline]
-    fn sub(self, other: U) -> $ident<U> {
-        let mut m = [U::zero(); $channels];
+    fn sub(self, other: U) -> $ident<T> {
+        let mut m = [T::zero(); $channels];
         for i in 0..$channels {
-            m[i] = U::from(self.data[i]).unwrap() - other;
+            let a = self.data[i].to_f32().unwrap();
+            let b = other.to_f32().unwrap();
+
+            m[i] = if T::min_value().to_f32().unwrap() > a-b {
+                T::min_value()
+            } else {
+                T::from(a - b).unwrap()
+            };
+            // m[i] = U::from(self.data[i]).unwrap() - other;
         }
         $ident(m)
     }
 }
 
+// Pixel * scalar
 impl<T: Primitive, U: Primitive> Mul<U> for $ident<T> {
-    type Output = $ident<U>;
+    type Output = $ident<T>;
 
     #[inline]
-    fn mul(self, other: U) -> $ident<U> {
-        let mut m = [U::zero(); $channels];
+    fn mul(self, other: U) -> $ident<T> {
+        let mut m = [T::zero(); $channels];
         for i in 0..$channels {
-            m[i] = U::from(self.data[i]).unwrap() * other;
+            let a = self.data[i].to_f32().unwrap();
+            let b = other.to_f32().unwrap();
+
+            m[i] = if T::max_value().to_f32().unwrap() < a * b {
+                T::max_value()
+            } else {
+                T::from(a * b).unwrap()
+            }
+            // m[i] = U::from(self.data[i]).unwrap() * other;
         }
         $ident(m)
     }
@@ -263,7 +290,7 @@ impl<T: Primitive, U: Primitive> Mul<U> for $ident<T> {
 
 define_colors! {
     BGR, 3, "BGR", #[doc = "RGB colors"];
-    Gray, 1, "Y", #[doc = "Grayscale colors"];
+    Gray, 1, "Y", #[doc = "GrayScale colors"];
     BGRA, 4, "BGRA", #[doc = "BGR colors + alpha channel"];
     RGBA, 4, "RGBA", #[doc = "RGB colors + alpha channel"];
 }
@@ -354,7 +381,7 @@ impl<T: Pixel> GenericImage for Image<T> {
 
 impl<T: Pixel> Image<T> {
     pub fn new(width: u32, height: u32) -> Image<T> {
-        // fast allocation without initization
+        // fast allocation without initialization
         let len = (width as usize) * (height as usize);
         let mut data: Vec<T> = Vec::with_capacity(len);
         unsafe {
@@ -594,7 +621,9 @@ impl<'a, P> Iterator for ImageMutIterator<'a, P>
         }
         let (x, y) = (self.x, self.y);
         self.x += 1;
+
         // TODO: implement this without `unsafe'
+        // seems impossible
         unsafe {
             let t: *mut P = &mut self.image.row_mut(y)[x as usize];
             Some((x, y, &mut *t))

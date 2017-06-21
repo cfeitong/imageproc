@@ -9,4 +9,5 @@ num  = "*"
 time = "*"
 libc  = "*"
 nalgebra = "*"
+lazy_static = "*"
 

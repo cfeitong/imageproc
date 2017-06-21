@@ -22,8 +22,8 @@ impl ColorMapper for MapBGRAGray {
     }
 }
 
-pub struct MapGrayBgra;
-impl ColorMapper for MapGrayBgra {
+pub struct MapGrayBGRA;
+impl ColorMapper for MapGrayBGRA {
     type SrcType = Gray<u8>;
     type DstType = BGRA<u8>;
 
@@ -34,8 +34,8 @@ impl ColorMapper for MapGrayBgra {
     }
 }
 
-pub struct MapGrayBgr;
-impl ColorMapper for MapGrayBgr {
+pub struct MapGrayBGR;
+impl ColorMapper for MapGrayBGR {
     type SrcType = Gray<u8>;
     type DstType = BGR<u8>;
 
@@ -46,8 +46,8 @@ impl ColorMapper for MapGrayBgr {
     }
 }
 
-pub struct MapBgrGray;
-impl ColorMapper for MapBgrGray {
+pub struct MapBGRGray;
+impl ColorMapper for MapBGRGray {
     type SrcType = BGR<u8>;
     type DstType = Gray<u8>;
 
