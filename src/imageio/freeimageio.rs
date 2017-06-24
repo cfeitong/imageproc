@@ -103,9 +103,9 @@ fn init() {
 }
 
 unsafe fn from_raw<T: Pixel>(np: *mut c_void) -> Image<T> {
-    let w = FreeImage_GetWidth(np);
-    let h = FreeImage_GetHeight(np);
-    let pitch = FreeImage_GetPitch(np);
+    let w = FreeImage_GetWidth(np) as usize;
+    let h = FreeImage_GetHeight(np) as usize;
+    let pitch = FreeImage_GetPitch(np) as usize;
     let mut image = Image::new(w, h);
     {
         let stride_dst = image.pitch();
@@ -181,8 +181,8 @@ unsafe fn to_raw<T: Pixel>(image: &Image<T>) -> *mut c_void {
     }
 
     {
-        let h = FreeImage_GetHeight(p);
-        let pitch = FreeImage_GetPitch(p);
+        let h = FreeImage_GetHeight(p) as usize;
+        let pitch = FreeImage_GetPitch(p) as usize;
         let stride_src = image.pitch();
         let src = image.raw();
         let psrc = src.as_ptr() as *const u8;

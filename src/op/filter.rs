@@ -151,8 +151,8 @@ where
             let ix = i as i32 + sx;
             let iy = j as i32 + sy;
             if ix >= 0 && iy >= 0 && ix < img.width() as i32 && iy < img.height() as i32 {
-                let tx = ix as u32;
-                let ty = iy as u32;
+                let tx = ix as usize;
+                let ty = iy as usize;
                 let a = img[(tx, ty)];
                 let b = kern[(i, j)];
                 let res = a * b;
@@ -198,7 +198,7 @@ fn median_filter_calc_one<P: Pixel>(
         for x in sx..(sx + filter.width as i32) {
             for y in sy..(sy + filter.height as i32) {
                 if 0 <= x && x < img.width() as i32 && 0 <= y && y < img.height() as i32 {
-                    let pixel = img[(x as u32, y as u32)];
+                    let pixel = img[(x as usize, y as usize)];
                     counter.push(pixel.raw()[c]);
                 }
             }

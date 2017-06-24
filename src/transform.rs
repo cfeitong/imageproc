@@ -11,7 +11,7 @@ pub enum InterplateType {
     Bilinear,
 }
 
-pub fn resize_nearest<T: Pixel>(src: &Image<T>, width: u32, height: u32) -> Image<T> {
+pub fn resize_nearest<T: Pixel>(src: &Image<T>, width: usize, height: usize) -> Image<T> {
     let mut dst = Image::new(width, height);
     let yscale: f32 = src.height() as f32 / height as f32;
     let xscale: f32 = src.width() as f32 / width as f32;
@@ -29,7 +29,7 @@ pub fn resize_nearest<T: Pixel>(src: &Image<T>, width: u32, height: u32) -> Imag
             h as f32 * yscale,
             0,
             src.height() as i32 - 1,
-        ) as u32);
+        ) as usize);
         for w in 0..width as usize {
             pdst[w] = psrc[xidx[w]];
         }
@@ -37,7 +37,7 @@ pub fn resize_nearest<T: Pixel>(src: &Image<T>, width: u32, height: u32) -> Imag
     dst
 }
 
-pub fn resize_bilinear<T: Pixel>(src: &Image<T>, width: u32, height: u32) -> Image<T> {
+pub fn resize_bilinear<T: Pixel>(src: &Image<T>, width: usize, height: usize) -> Image<T> {
     let mut dst = Image::new(width, height);
     let yscale: f32 = src.height() as f32 / height as f32;
     let xscale: f32 = src.width() as f32 / width as f32;
@@ -63,8 +63,8 @@ pub fn resize_bilinear<T: Pixel>(src: &Image<T>, width: u32, height: u32) -> Ima
         let b = mid.ceil();
         let dy = b - mid;
 
-        let psrc0 = src.row(clipped_round(t, 0, src.height() as i32 - 1) as u32);
-        let psrc1 = src.row(clipped_round(b, 0, src.height() as i32 - 1) as u32);
+        let psrc0 = src.row(clipped_round(t, 0, src.height() as i32 - 1) as usize);
+        let psrc1 = src.row(clipped_round(b, 0, src.height() as i32 - 1) as usize);
         for w in 0..width as usize {
             let x0 = x_0[w];
             let x1 = x_1[w];
@@ -79,8 +79,8 @@ pub fn resize_bilinear<T: Pixel>(src: &Image<T>, width: u32, height: u32) -> Ima
 
 pub fn resize<T: Pixel>(
     src: &Image<T>,
-    width: u32,
-    height: u32,
+    width: usize,
+    height: usize,
     interp: InterplateType,
 ) -> Image<T> {
     match interp {
@@ -91,8 +91,8 @@ pub fn resize<T: Pixel>(
 
 pub fn warp_perspective<T: Pixel>(
     src: &Image<T>,
-    width: u32,
-    height: u32,
+    width: usize,
+    height: usize,
     affine: &Affine2D,
     interp: InterplateType,
 ) -> Image<T> {
@@ -108,16 +108,16 @@ pub fn warp_perspective<T: Pixel>(
                     let ix = sx.round() as i32;
                     let iy = sy.round() as i32;
                     if ix >= 0 && ix < src.width() as i32 && iy >= 0 && iy < src.height() as i32 {
-                        pdst[w as usize] = src[(ix as u32, iy as u32)];
+                        pdst[w as usize] = src[(ix as usize, iy as usize)];
                     }
                 }
                 InterplateType::Bilinear => {
                     let u = sx.ceil() - sx;
                     let v = sy.ceil() - sy;
-                    let x0 = clip(sx.floor() as i32, 0, src.width() as i32 - 1) as u32;
-                    let y0 = clip(sy.floor() as i32, 0, src.height() as i32 - 1) as u32;
-                    let x1 = clip(sx.ceil() as i32, 0, src.width() as i32 - 1) as u32;
-                    let y1 = clip(sy.ceil() as i32, 0, src.height() as i32 - 1) as u32;
+                    let x0 = clip(sx.floor() as i32, 0, src.width() as i32 - 1) as usize;
+                    let y0 = clip(sy.floor() as i32, 0, src.height() as i32 - 1) as usize;
+                    let x1 = clip(sx.ceil() as i32, 0, src.width() as i32 - 1) as usize;
+                    let y1 = clip(sy.ceil() as i32, 0, src.height() as i32 - 1) as usize;
                     pdst[w as usize] =
                         src[(x0, y0)].blend4(src[(x1, y0)], src[(x0, y1)], src[(x1, y1)], u, v);
                 }
@@ -208,7 +208,7 @@ where
     dst
 }
 
-//pub fn max<T: Pixel>(src: &Image<T>) -> (u32, u32, T) {
+//pub fn max<T: Pixel>(src: &Image<T>) -> (usize, usize, T) {
 //}
 
 #[derive(Debug, Clone)]

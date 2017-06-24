@@ -369,9 +369,9 @@ pub trait GenericImage {
 
 #[derive(Debug)]
 pub struct Image<T: Pixel> {
-    w: u32,
-    h: u32,
-    stride: u32, //stride in sizeof(T)
+    w: usize,
+    h: usize,
+    stride: usize, //stride in sizeof(T)
     data: Vec<T>,
 }
 
@@ -380,7 +380,7 @@ impl<T: Pixel> GenericImage for Image<T> {
 }
 
 impl<T: Pixel> Image<T> {
-    pub fn new(width: u32, height: u32) -> Image<T> {
+    pub fn new(width: usize, height: usize) -> Image<T> {
         // fast allocation without initialization
         let len = (width as usize) * (height as usize);
         let mut data: Vec<T> = Vec::with_capacity(len);
@@ -396,28 +396,28 @@ impl<T: Pixel> Image<T> {
     }
 
     #[inline]
-    pub fn width(&self) -> u32 {
+    pub fn width(&self) -> usize {
         self.w
     }
 
     #[inline]
-    pub fn height(&self) -> u32 {
+    pub fn height(&self) -> usize {
         self.h
     }
 
     #[inline]
-    pub fn size(&self) -> (u32, u32) {
+    pub fn size(&self) -> (usize, usize) {
         (self.w, self.h)
     }
 
     #[inline]
-    pub fn stride(&self) -> u32 {
+    pub fn stride(&self) -> usize {
         self.stride
     }
 
     #[inline]
-    pub fn pitch(&self) -> u32 {
-        self.stride * (self.bits_per_pixel() / 8) as u32
+    pub fn pitch(&self) -> usize {
+        self.stride * (self.bits_per_pixel() / 8) as usize
     }
 
     #[inline]
@@ -456,13 +456,13 @@ impl<T: Pixel> Image<T> {
     }
 
     #[inline]
-    pub fn row(&self, r: u32) -> &[T] {
+    pub fn row(&self, r: usize) -> &[T] {
         let start = r * self.stride;
         &self.data[start as usize..(start + self.stride) as usize]
     }
 
     #[inline]
-    pub fn row_mut(&mut self, r: u32) -> &mut [T] {
+    pub fn row_mut(&mut self, r: usize) -> &mut [T] {
         let start = r * self.stride;
         &mut self.data[start as usize..(start + self.stride) as usize]
     }
@@ -531,20 +531,20 @@ impl<T: Pixel> Clone for Image<T> {
     }
 }
 
-impl<T: Pixel> Index<(u32, u32)> for Image<T> {
+impl<T: Pixel> Index<(usize, usize)> for Image<T> {
     type Output = T;
 
     #[inline]
-    fn index(&self, _index: (u32, u32)) -> &T {
+    fn index(&self, _index: (usize, usize)) -> &T {
         let (x, y) = _index;
         let off = self.stride * y + x;
         &self.data[off as usize]
     }
 }
 
-impl<T: Pixel> IndexMut<(u32, u32)> for Image<T> {
+impl<T: Pixel> IndexMut<(usize, usize)> for Image<T> {
     #[inline]
-    fn index_mut(&mut self, _index: (u32, u32)) -> &mut T {
+    fn index_mut(&mut self, _index: (usize, usize)) -> &mut T {
         let (x, y) = _index;
         let off = self.stride * y + x;
         &mut self.data[off as usize]
@@ -568,8 +568,8 @@ where
 {
     image: &'a Image<P>,
     row: &'a [P],
-    y: u32,
-    x: u32,
+    y: usize,
+    x: usize,
 }
 
 impl<'a, P> Iterator for ImageIterator<'a, P>
@@ -578,9 +578,9 @@ where
     <P as Index<usize>>::Output: 'a,
     P::Subpixel: 'a,
 {
-    type Item = (u32, u32, &'a P);
+    type Item = (usize, usize, &'a P);
     #[inline]
-    fn next(&mut self) -> Option<(u32, u32, &'a P)> {
+    fn next(&mut self) -> Option<(usize, usize, &'a P)> {
         if self.x >= self.image.width() {
             self.y += 1;
             if self.y >= self.image.height() {
@@ -603,8 +603,8 @@ where
     P::Subpixel: 'a,
 {
     image: &'a mut Image<P>,
-    y: u32,
-    x: u32,
+    y: usize,
+    x: usize,
 }
 
 impl<'a, P> Iterator for ImageMutIterator<'a, P>
@@ -613,9 +613,9 @@ where
     <P as Index<usize>>::Output: 'a,
     P::Subpixel: 'a,
 {
-    type Item = (u32, u32, &'a mut P);
+    type Item = (usize, usize, &'a mut P);
     #[inline]
-    fn next(&mut self) -> Option<(u32, u32, &'a mut P)> {
+    fn next(&mut self) -> Option<(usize, usize, &'a mut P)> {
         if self.x >= self.image.width() {
             self.y += 1;
             self.x = 0;
