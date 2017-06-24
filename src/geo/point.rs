@@ -12,7 +12,7 @@ pub struct Point<T: GeoScalar> {
 
 impl<T: GeoScalar> Point<T> {
     pub fn new(x: T, y: T) -> Point<T> {
-        return Point { x: x, y: y };
+        Point { x: x, y: y }
     }
 }
 

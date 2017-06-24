@@ -17,11 +17,19 @@ pub fn resize_nearest<T: Pixel>(src: &Image<T>, width: u32, height: u32) -> Imag
     let xscale: f32 = src.width() as f32 / width as f32;
     let mut xidx: Vec<usize> = Vec::with_capacity(width as usize);
     for w in 0..width as usize {
-        xidx.push(clipped_round(w as f32 * xscale, 0, src.width() as i32 - 1) as usize);
+        xidx.push(clipped_round(
+            w as f32 * xscale,
+            0,
+            src.width() as i32 - 1,
+        ) as usize);
     }
     for h in 0..height {
         let pdst = dst.row_mut(h);
-        let psrc = src.row(clipped_round(h as f32 * yscale, 0, src.height() as i32 - 1) as u32);
+        let psrc = src.row(clipped_round(
+            h as f32 * yscale,
+            0,
+            src.height() as i32 - 1,
+        ) as u32);
         for w in 0..width as usize {
             pdst[w] = psrc[xidx[w]];
         }
@@ -69,23 +77,25 @@ pub fn resize_bilinear<T: Pixel>(src: &Image<T>, width: u32, height: u32) -> Ima
     dst
 }
 
-pub fn resize<T: Pixel>(src: &Image<T>,
-                        width: u32,
-                        height: u32,
-                        interp: InterplateType)
-                        -> Image<T> {
+pub fn resize<T: Pixel>(
+    src: &Image<T>,
+    width: u32,
+    height: u32,
+    interp: InterplateType,
+) -> Image<T> {
     match interp {
         InterplateType::Nearest => resize_nearest(src, width, height),
         InterplateType::Bilinear => resize_bilinear(src, width, height),
     }
 }
 
-pub fn warp_perspective<T: Pixel>(src: &Image<T>,
-                                  width: u32,
-                                  height: u32,
-                                  affine: &Affine2D,
-                                  interp: InterplateType)
-                                  -> Image<T> {
+pub fn warp_perspective<T: Pixel>(
+    src: &Image<T>,
+    width: u32,
+    height: u32,
+    affine: &Affine2D,
+    interp: InterplateType,
+) -> Image<T> {
     let mut dst: Image<T> = Image::new(width, height);
     for h in 0..height {
         let pdst = dst.row_mut(h);
@@ -138,9 +148,10 @@ pub fn flip_horizontal<T: Pixel>(src: &Image<T>) -> Image<T> {
 }
 
 pub fn min<T, U>(src: &Image<T>) -> U
-    where T: Pixel,
-          U: Pixel,
-          T: Index<usize, Output = U::Subpixel>
+where
+    T: Pixel,
+    U: Pixel,
+    T: Index<usize, Output = U::Subpixel>,
 {
     let mut t = [U::Subpixel::max_value(); MAX_CHANNEL_COUNT];
     for (_, _, p) in src.iter() {
@@ -154,9 +165,10 @@ pub fn min<T, U>(src: &Image<T>) -> U
 }
 
 pub fn max<T, U>(src: &Image<T>) -> U
-    where T: Pixel,
-          U: Pixel,
-          T: Index<usize, Output = U::Subpixel>
+where
+    T: Pixel,
+    U: Pixel,
+    T: Index<usize, Output = U::Subpixel>,
 {
     let mut t = [U::Subpixel::min_value(); MAX_CHANNEL_COUNT];
     for (_, _, p) in src.iter() {
@@ -170,16 +182,17 @@ pub fn max<T, U>(src: &Image<T>) -> U
 }
 
 pub fn normalize<U, V, M>(src: &Image<U>, alpha: f32, beta: f32) -> Image<V>
-    where U: Pixel,
-          V: Pixel,
-          M: Pixel,
-          U: Index<usize, Output = M::Subpixel>
+where
+    U: Pixel,
+    V: Pixel,
+    M: Pixel,
+    U: Index<usize, Output = M::Subpixel>,
 {
     let mut dst = Image::<V>::new(src.width(), src.height());
     let mut mins = [0f32; MAX_CHANNEL_COUNT];
     let mut maxs = [0f32; MAX_CHANNEL_COUNT];
-    let min_p: M = min(&src);
-    let max_p: M = max(&src);
+    let min_p: M = min(src);
+    let max_p: M = max(src);
     let s = beta - alpha;
     for c in 0..U::channels() {
         mins[c] = min_p.raw()[c].to_f32().unwrap();

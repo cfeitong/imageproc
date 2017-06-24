@@ -14,12 +14,12 @@ pub struct Rect<T: GeoScalar> {
 
 impl<T: GeoScalar> Rect<T> {
     pub fn new(x: T, y: T, w: T, h: T) -> Rect<T> {
-        return Rect {
-                   x: x,
-                   y: y,
-                   width: w,
-                   height: h,
-               };
+        Rect {
+            x: x,
+            y: y,
+            width: w,
+            height: h,
+        }
     }
 
     pub fn area(&self) -> T {
@@ -36,10 +36,11 @@ impl<T: GeoScalar> Rect<T> {
 
     pub fn contains(&self, p: &Point<T>) -> bool {
         if self.x <= p.x && p.x < self.x + self.width && self.y <= p.y &&
-           p.y < self.y + self.height {
-            return true;
+            p.y < self.y + self.height
+        {
+            true
         } else {
-            return false;
+            false
         }
     }
 
@@ -58,12 +59,14 @@ impl<T: GeoScalar> Rect<T> {
 
 impl<T: GeoScalar> fmt::Display for Rect<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f,
-               "[{}, {}, {}, {}]",
-               self.x,
-               self.y,
-               self.width,
-               self.height)
+        write!(
+            f,
+            "[{}, {}, {}, {}]",
+            self.x,
+            self.y,
+            self.width,
+            self.height
+        )
     }
 }
 

@@ -129,12 +129,16 @@ mod test {
     use super::*;
     #[test]
     fn test_affine() {
-        let src = vec![Pointf::new(0f32, 0f32),
-                       Pointf::new(1f32, 0f32),
-                       Pointf::new(0f32, 1f32)];
-        let dst = vec![Pointf::new(1f32, 0f32),
-                       Pointf::new(1f32, 1f32),
-                       Pointf::new(0f32, 0f32)];
+        let src = vec![
+            Pointf::new(0f32, 0f32),
+            Pointf::new(1f32, 0f32),
+            Pointf::new(0f32, 1f32),
+        ];
+        let dst = vec![
+            Pointf::new(1f32, 0f32),
+            Pointf::new(1f32, 1f32),
+            Pointf::new(0f32, 0f32),
+        ];
         let aff1 = Affine2D::affine_from_points(&src, &dst).unwrap();
         assert_eq!(aff1.map_point(src[0].clone()), dst[0]);
         assert_eq!(aff1.map_point_inv(dst[0].clone()), src[0]);

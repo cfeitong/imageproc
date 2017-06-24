@@ -2,12 +2,16 @@ use image::{Image, Pixel};
 use std::ops::{Index, IndexMut, Mul};
 use num::Saturating;
 
-pub trait Kernel
-    : Index<(usize, usize), Output = f32>
-    + IndexMut<(usize, usize), Output = f32> {
-    fn size(&self) -> (usize, usize);
+pub trait Filter {
     fn filter<P>(&self, img: &Image<P>) -> Image<P>
-        where P: Pixel + Mul<f32, Output = P> + Saturating;
+    where
+        P: Pixel + Mul<f32, Output = P> + Saturating;
+}
+
+pub trait Kernel
+    : Index<(usize, usize), Output = f32> + IndexMut<(usize, usize), Output = f32> + Filter
+    {
+    fn size(&self) -> (usize, usize);
 }
 
 
@@ -42,12 +46,7 @@ impl IndexMut<(usize, usize)> for $Kern {
     }
 }
 
-impl Kernel for $Kern {
-
-    fn size(&self) -> (usize, usize) {
-        (self.width, self.height)
-    }
-
+impl Filter for $Kern {
     fn filter<P>(&self, img: &Image<P>) -> Image<P>
         where P: Pixel + Mul<f32, Output=P> + Saturating {
         let mut ret: Image<P> = Image::new(img.width(), img.height());
@@ -58,6 +57,13 @@ impl Kernel for $Kern {
         }
         ret
     }
+}
+
+impl Kernel for $Kern {
+    fn size(&self) -> (usize, usize) {
+        (self.width, self.height)
+    }
+
 }
     )
 }
@@ -94,7 +100,7 @@ impl GaussianKernel {
                 let dx = (x as f32 - (size / 2) as f32).abs();
                 let dy = (y as f32 - (size / 2) as f32).abs();
                 let mut cur: f32 = -((dx * dx) / (2f32 * sigma * sigma) +
-                                     (dy * dy) / (2f32 * sigma * sigma));
+                                         (dy * dy) / (2f32 * sigma * sigma));
                 cur = cur.exp();
                 row.push(cur);
             }
@@ -130,8 +136,10 @@ fn normalize<T: Kernel>(kern: &mut T) {
 }
 
 fn kern_calc_one_pos<K, P>(kern: &K, x: usize, y: usize, img: &Image<P>) -> P
-    where P: Pixel + Saturating + Mul<f32, Output = P>,
-          K: Kernel {
+where
+    P: Pixel + Saturating + Mul<f32, Output = P>,
+    K: Kernel,
+{
     let mut ret: P = P::zero();
     let (width, height) = kern.size();
     let half_x = width / 2;
@@ -145,7 +153,7 @@ fn kern_calc_one_pos<K, P>(kern: &K, x: usize, y: usize, img: &Image<P>) -> P
             if ix >= 0 && iy >= 0 && ix < img.width() as i32 && iy < img.height() as i32 {
                 let tx = ix as u32;
                 let ty = iy as u32;
-                let a = img[(tx, ty)].clone();
+                let a = img[(tx, ty)];
                 let b = kern[(i, j)];
                 let res = a * b;
                 ret = ret.saturating_add(res);
@@ -155,9 +163,65 @@ fn kern_calc_one_pos<K, P>(kern: &K, x: usize, y: usize, img: &Image<P>) -> P
     ret
 }
 
+#[derive(Debug)]
+pub struct MedianFilter {
+    pub width: usize,
+    pub height: usize,
+}
+
+impl Filter for MedianFilter {
+    fn filter<P>(&self, img: &Image<P>) -> Image<P>
+    where
+        P: Pixel + Mul<f32, Output = P> + Saturating,
+    {
+        let mut ret: Image<P> = Image::new(img.width(), img.height());
+        for x in 0..img.width() {
+            for y in 0..img.height() {
+                ret[(x, y)] = median_filter_calc_one(self, x as usize, y as usize, img);
+            }
+        }
+        ret
+    }
+}
+
+fn median_filter_calc_one<P: Pixel>(
+    filter: &MedianFilter,
+    x: usize,
+    y: usize,
+    img: &Image<P>,
+) -> P {
+    let mut ret = P::zero();
+    for c in 0..img.channels() {
+        let mut counter = Vec::new();
+        let sx = x as i32 - (filter.width / 2) as i32;
+        let sy = y as i32 - (filter.height / 2) as i32;
+        for x in sx..(sx + filter.width as i32) {
+            for y in sy..(sy + filter.height as i32) {
+                if 0 <= x && x < img.width() as i32 && 0 <= y && y < img.height() as i32 {
+                    let pixel = img[(x as u32, y as u32)];
+                    counter.push(pixel.raw()[c]);
+                }
+            }
+        }
+        counter.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        let len = counter.len();
+        ret.raw_mut()[c] = counter[len / 2];
+    }
+    ret
+}
+
+impl MedianFilter {
+    fn new(width: usize, height: usize) -> Self {
+        assert_eq!(width & 1, 1);
+        assert_eq!(height & 1, 1);
+        MedianFilter { width, height }
+    }
+}
+
+
 #[cfg(test)]
 mod test {
-    use super::{GeneralKernel, Kernel, GaussianKernel};
+    use super::{GeneralKernel, GaussianKernel, Filter, MedianFilter};
     use imageio::{ImageIO, FreeImageIO};
     use image::ImageBGR;
     use std::path::Path;
@@ -176,10 +240,21 @@ mod test {
     #[test]
     fn test_gaussian_kernel() {
         let kern = GaussianKernel::new(3, 0.8);
-        let path = Path::new("./tests/cat.jpg");
+        let path = Path::new("./tests/coins_speckle_0.1.tif");
         let img: ImageBGR = FreeImageIO::from_path(&path).unwrap();
         let result = kern.filter(&img);
         let path = Path::new("/tmp/test-gaussian-kern-out1.jpg");
         FreeImageIO::save(&path, &result).unwrap();
+    }
+
+    #[test]
+    fn test_median_filter() {
+        let filter = MedianFilter::new(5, 5);
+        let path = Path::new("./tests/coins_salt_pepper_0.1.tif");
+        let img: ImageBGR = FreeImageIO::from_path(&path).unwrap();
+        let result = filter.filter(&img);
+        let path = Path::new("/tmp/test-median-filter-out1.jpg");
+        FreeImageIO::save(&path, &result).unwrap();
+
     }
 }

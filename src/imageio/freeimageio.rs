@@ -60,19 +60,21 @@ const FIF_LOAD_NOPIXELS: c_int = 0x8000;
 extern "C" {
     fn FreeImage_Initialise(load_local_only: c_int);
     fn FreeImage_DeInitialise();
-    fn FreeImage_Allocate(width: c_int,
-                          height: c_int,
-                          bpp: c_int,
-                          red_mask: c_uint,
-                          green_mask: c_uint,
-                          blue_mask: c_uint)
-                          -> *mut c_void;
+    fn FreeImage_Allocate(
+        width: c_int,
+        height: c_int,
+        bpp: c_int,
+        red_mask: c_uint,
+        green_mask: c_uint,
+        blue_mask: c_uint,
+    ) -> *mut c_void;
     fn FreeImage_Load(fif: ImageFormat, filename: *const c_char, flag: c_int) -> *mut c_void;
-    fn FreeImage_Save(fif: ImageFormat,
-                      dib: *mut c_void,
-                      filename: *const c_char,
-                      flags: c_int)
-                      -> c_int;
+    fn FreeImage_Save(
+        fif: ImageFormat,
+        dib: *mut c_void,
+        filename: *const c_char,
+        flags: c_int,
+    ) -> c_int;
     fn FreeImage_Unload(dib: *mut c_void);
 
     fn FreeImage_GetFileType(filename: *const c_char, size: c_int) -> ImageFormat;
@@ -93,11 +95,11 @@ extern "C" {
 fn init() {
     static LIBSTART: Once = ONCE_INIT;
     LIBSTART.call_once(|| {
-                           // XXX not unloaded
-                           unsafe {
-                               FreeImage_Initialise(0);
-                           }
-                       });
+        // XXX not unloaded
+        unsafe {
+            FreeImage_Initialise(0);
+        }
+    });
 }
 
 unsafe fn from_raw<T: Pixel>(np: *mut c_void) -> Image<T> {
@@ -117,9 +119,11 @@ unsafe fn from_raw<T: Pixel>(np: *mut c_void) -> Image<T> {
         let sptr_end = sptr.offset((pitch * (h - 1)) as isize);
         for y in 0..h {
             // freeimage save image reversely
-            ptr::copy(sptr_end.offset(-((y * pitch) as isize)),
-                      pdst.offset((y * stride_dst) as isize),
-                      stride_dst as usize);
+            ptr::copy(
+                sptr_end.offset(-((y * pitch) as isize)),
+                pdst.offset((y * stride_dst) as isize),
+                stride_dst as usize,
+            );
         }
 
     }
@@ -164,12 +168,14 @@ unsafe fn to_raw<T: Pixel>(image: &Image<T>) -> *mut c_void {
     let src_bits = image.bits_per_pixel() as i32;
     assert!(src_bits == 8 || src_bits == 24 || src_bits == 32);
     // XXX opt me
-    let p = FreeImage_Allocate(image.width() as i32,
-                               image.height() as i32,
-                               src_bits,
-                               0,
-                               0,
-                               0);
+    let p = FreeImage_Allocate(
+        image.width() as i32,
+        image.height() as i32,
+        src_bits,
+        0,
+        0,
+        0,
+    );
     if p.is_null() {
         return p;
     }
@@ -188,9 +194,11 @@ unsafe fn to_raw<T: Pixel>(image: &Image<T>) -> *mut c_void {
         let dptr_end = dptr.offset((pitch * (h - 1)) as isize);
         for y in 0..h {
             // freeimage save image reversely
-            ptr::copy(psrc.offset((y * stride_src) as isize),
-                      dptr_end.offset(-((y * pitch) as isize)),
-                      stride_src as usize);
+            ptr::copy(
+                psrc.offset((y * stride_src) as isize),
+                dptr_end.offset(-((y * pitch) as isize)),
+                stride_src as usize,
+            );
         }
     }
     p

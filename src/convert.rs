@@ -70,7 +70,8 @@ impl ColorMapper for MapGrayGrayf {
 }
 
 pub fn convert<M>(src: &Image<M::SrcType>) -> Image<M::DstType>
-    where M: ColorMapper
+where
+    M: ColorMapper,
 {
     let mut dst = Image::new(src.width(), src.height());
     for h in 0..src.height() {
@@ -84,9 +85,10 @@ pub fn convert<M>(src: &Image<M::SrcType>) -> Image<M::DstType>
 }
 
 pub fn split<T, U>(src: &Image<T>) -> Vec<Image<Gray<U>>>
-    where T: Pixel,
-          U: Primitive,
-          T: Index<usize, Output = U>
+where
+    T: Pixel,
+    U: Primitive,
+    T: Index<usize, Output = U>,
 {
     let mut out = Vec::with_capacity(src.channels() as usize);
     for _ in 0..src.channels() {
@@ -107,9 +109,10 @@ pub fn split<T, U>(src: &Image<T>) -> Vec<Image<Gray<U>>>
 }
 
 pub fn merge<P, T>(src: &Vec<Image<Gray<P>>>) -> Image<T>
-    where P: Primitive,
-          T: Pixel,
-          T: IndexMut<usize, Output = P>
+where
+    P: Primitive,
+    T: Pixel,
+    T: IndexMut<usize, Output = P>,
 {
     assert_eq!(T::channels() as usize, src.len());
     let src0 = &src[0];

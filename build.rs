@@ -32,9 +32,9 @@ fn main() {
         .into_string()
         .unwrap();
 
-    run(Command::new(make())
-            .arg("-j4")
-            .current_dir("3rdparty/FreeImage"));
+    run(Command::new(make()).arg("-j4").current_dir(
+        "3rdparty/FreeImage",
+    ));
 
     println!("cargo:rustc-link-search=native={}", freeimage_dir);
     println!("cargo:rustc-flags=-l dylib=c++");

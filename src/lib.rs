@@ -2,9 +2,9 @@
 #![warn(unused_qualifications)]
 #![allow(dead_code)]
 
-extern crate num;
 extern crate libc;
 extern crate nalgebra;
+extern crate num;
 
 mod traits;
 pub mod image;

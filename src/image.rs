@@ -561,9 +561,10 @@ pub type ImageBGRf = Image<BGR<f32>>;
 pub type ImageBGRAf = Image<BGRA<f32>>;
 
 pub struct ImageIterator<'a, P>
-    where P: Pixel + 'a,
-          <P as Index<usize>>::Output: 'a,
-          P::Subpixel: 'a
+where
+    P: Pixel + 'a,
+    <P as Index<usize>>::Output: 'a,
+    P::Subpixel: 'a,
 {
     image: &'a Image<P>,
     row: &'a [P],
@@ -572,9 +573,10 @@ pub struct ImageIterator<'a, P>
 }
 
 impl<'a, P> Iterator for ImageIterator<'a, P>
-    where P: Pixel + 'a,
-          <P as Index<usize>>::Output: 'a,
-          P::Subpixel: 'a
+where
+    P: Pixel + 'a,
+    <P as Index<usize>>::Output: 'a,
+    P::Subpixel: 'a,
 {
     type Item = (u32, u32, &'a P);
     #[inline]
@@ -595,9 +597,10 @@ impl<'a, P> Iterator for ImageIterator<'a, P>
 }
 
 pub struct ImageMutIterator<'a, P>
-    where P: Pixel + 'a,
-          <P as Index<usize>>::Output: 'a,
-          P::Subpixel: 'a
+where
+    P: Pixel + 'a,
+    <P as Index<usize>>::Output: 'a,
+    P::Subpixel: 'a,
 {
     image: &'a mut Image<P>,
     y: u32,
@@ -605,9 +608,10 @@ pub struct ImageMutIterator<'a, P>
 }
 
 impl<'a, P> Iterator for ImageMutIterator<'a, P>
-    where P: Pixel + 'a,
-          <P as Index<usize>>::Output: 'a,
-          P::Subpixel: 'a
+where
+    P: Pixel + 'a,
+    <P as Index<usize>>::Output: 'a,
+    P::Subpixel: 'a,
 {
     type Item = (u32, u32, &'a mut P);
     #[inline]

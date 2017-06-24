@@ -6,7 +6,7 @@ use std::fmt::{Display, Debug};
 use num::{Bounded, Num, NumCast};
 
 
-/// Primitive trait from old stdlib, added max_value
+/// Primitive trait from old stdlib, added `max_value`
 pub trait Primitive
     : Copy + NumCast + Num + PartialOrd<Self> + Clone + Bounded + Display + Debug
     {
