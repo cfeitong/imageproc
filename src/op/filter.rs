@@ -193,11 +193,11 @@ fn median_filter_calc_one<P: Pixel>(
     let mut ret = P::zero();
     for c in 0..img.channels() {
         let mut counter = Vec::new();
-        let sx = x as i32 - (filter.width / 2) as i32;
-        let sy = y as i32 - (filter.height / 2) as i32;
-        for x in sx..(sx + filter.width as i32) {
-            for y in sy..(sy + filter.height as i32) {
-                if 0 <= x && x < img.width() as i32 && 0 <= y && y < img.height() as i32 {
+        let sx = x as isize - (filter.width / 2) as isize;
+        let sy = y as isize - (filter.height / 2) as isize;
+        for x in sx..(sx + filter.width as isize) {
+            for y in sy..(sy + filter.height as isize) {
+                if 0 <= x && x < img.width() as isize && 0 <= y && y < img.height() as isize {
                     let pixel = img[(x as usize, y as usize)];
                     counter.push(pixel.raw()[c]);
                 }

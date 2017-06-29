@@ -14,5 +14,6 @@ pub mod transform;
 pub mod geo;
 pub mod math;
 pub mod op;
+pub mod view;
 
 pub use imageio::{ImageIO, FreeImageIO};

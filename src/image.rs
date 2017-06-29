@@ -1,5 +1,6 @@
 use std::slice;
 use num::NumCast;
+use std::rc::Rc;
 use num::traits::{Saturating, Bounded};
 use std::ops::{Index, IndexMut};
 use std::ops::{Add, Sub, Mul};
@@ -372,14 +373,14 @@ pub struct Image<T: Pixel> {
     w: usize,
     h: usize,
     stride: usize, //stride in sizeof(T)
-    data: Vec<T>,
+    data: Rc<Vec<T>>,
 }
 
 impl<T: Pixel> GenericImage for Image<T> {
     type Pixel = T;
 }
 
-impl<T: Pixel> Image<T> {
+impl<'a, T: Pixel+'a> Image<T> {
     pub fn new(width: usize, height: usize) -> Image<T> {
         // fast allocation without initialization
         let len = (width as usize) * (height as usize);
@@ -391,7 +392,16 @@ impl<T: Pixel> Image<T> {
             w: width,
             h: height,
             stride: width,
-            data: data,
+            data: Rc::new(data),
+        }
+    }
+
+    pub fn duplicate(&self) -> Image<T> {
+        Image {
+            w: self.w,
+            h: self.h,
+            stride: self.stride,
+            data: Rc::new(self.data.as_ref().clone())
         }
     }
 
@@ -422,12 +432,13 @@ impl<T: Pixel> Image<T> {
 
     #[inline]
     pub fn pixels(&self) -> &[T] {
-        &self.data
+        self.data.as_slice()
     }
 
     #[inline]
     pub fn pixels_mut(&mut self) -> &mut [T] {
-        &mut self.data
+        let t = Rc::get_mut(&mut self.data).unwrap();
+        t.as_mut_slice()
     }
 
     pub fn raw(&self) -> &[T::Subpixel] {
@@ -437,7 +448,7 @@ impl<T: Pixel> Image<T> {
 
     pub fn raw_mut(&mut self) -> &mut [T::Subpixel] {
         let raw_len = self.bytes_per_row() * self.h as usize;
-        unsafe { slice::from_raw_parts_mut(self.data.as_mut_ptr() as *mut T::Subpixel, raw_len) }
+        unsafe { slice::from_raw_parts_mut(self.pixels_mut().as_mut_ptr() as *mut T::Subpixel, raw_len) }
     }
 
     #[inline]
@@ -458,24 +469,25 @@ impl<T: Pixel> Image<T> {
     #[inline]
     pub fn row(&self, r: usize) -> &[T] {
         let start = r * self.stride;
-        &self.data[start as usize..(start + self.stride) as usize]
+        &self.data.as_ref()[start as usize..(start + self.stride) as usize]
     }
 
     #[inline]
     pub fn row_mut(&mut self, r: usize) -> &mut [T] {
         let start = r * self.stride;
-        &mut self.data[start as usize..(start + self.stride) as usize]
+        &mut Rc::get_mut(&mut self.data)
+            .unwrap()[start as usize..(start + self.stride) as usize]
     }
 
     pub fn fill(&mut self, v: &T) {
-        for p in self.data.iter_mut() {
+        for p in Rc::get_mut(&mut self.data).unwrap().as_mut_slice().iter_mut() {
             *p = *v;
         }
     }
 
     pub fn fill_channel(&mut self, ch_idx: usize, v: T::Subpixel) {
         assert!(ch_idx < T::channels() as usize);
-        for p in self.data.iter_mut() {
+        for p in Rc::get_mut(&mut self.data).unwrap().as_mut_slice().iter_mut() {
             p.raw_mut()[ch_idx] = v;
         }
     }
@@ -516,7 +528,7 @@ impl<T: AlphaPixel> AlphaImage for Image<T> {
 
 impl<T: Pixel> Drop for Image<T> {
     fn drop(&mut self) {
-        self.data.clear();
+        Rc::get_mut(&mut self.data).unwrap().clear();
     }
 }
 
@@ -538,7 +550,7 @@ impl<T: Pixel> Index<(usize, usize)> for Image<T> {
     fn index(&self, _index: (usize, usize)) -> &T {
         let (x, y) = _index;
         let off = self.stride * y + x;
-        &self.data[off as usize]
+        &self.data.as_ref()[off as usize]
     }
 }
 
@@ -547,7 +559,7 @@ impl<T: Pixel> IndexMut<(usize, usize)> for Image<T> {
     fn index_mut(&mut self, _index: (usize, usize)) -> &mut T {
         let (x, y) = _index;
         let off = self.stride * y + x;
-        &mut self.data[off as usize]
+        &mut Rc::get_mut(&mut self.data).unwrap()[off as usize]
     }
 }
 
@@ -627,7 +639,7 @@ where
         self.x += 1;
 
         // TODO: implement this without `unsafe'
-        // seems impossible
+        // seems impossible or very inconvenient at least
         unsafe {
             let t: *mut P = &mut self.image.row_mut(y)[x as usize];
             Some((x, y, &mut *t))
