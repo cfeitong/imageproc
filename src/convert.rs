@@ -2,6 +2,7 @@ use std::ops::{Index, IndexMut};
 use num::traits::ToPrimitive;
 use image::*;
 use traits::Primitive;
+use pixel::*;
 
 pub trait ColorMapper {
     type SrcType: Pixel;

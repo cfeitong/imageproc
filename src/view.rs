@@ -1,4 +1,4 @@
-use image::{Image, Pixel};
+use pixel::Pixel;
 use geo::{Recti};
 use std::ops::{Index, IndexMut};
 

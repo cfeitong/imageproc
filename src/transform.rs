@@ -1,4 +1,5 @@
 use image::*;
+use pixel::*;
 use num::NumCast;
 use std::ops::Index;
 use num::traits::Bounded;

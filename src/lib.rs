@@ -15,5 +15,6 @@ pub mod geo;
 pub mod math;
 pub mod op;
 pub mod view;
+pub mod pixel;
 
 pub use imageio::{ImageIO, FreeImageIO};

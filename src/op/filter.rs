@@ -1,4 +1,5 @@
-use image::{Image, Pixel};
+use image::Image;
+use pixel::Pixel;
 use std::ops::{Index, IndexMut, Mul};
 use num::Saturating;
 

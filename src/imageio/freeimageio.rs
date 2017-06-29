@@ -7,7 +7,8 @@ use self::libc::{c_int, c_uint, c_void, c_char, c_uchar};
 use std::sync::{Once, ONCE_INIT};
 
 use imageio::{ImageIO, ImagePing, ImageInfo};
-use image::{ImageBGRA, ImageBGR, ImageGray, ImageError, Image, Pixel};
+use image::{ImageBGRA, ImageBGR, ImageGray, ImageError, Image};
+use pixel::Pixel;
 
 #[repr(C)]
 #[allow(non_camel_case_types)]
