@@ -2,6 +2,7 @@ use image::Image;
 use pixel::Pixel;
 use std::ops::{Index, IndexMut, Mul};
 use num::Saturating;
+use eye::Eye;
 
 pub trait Filter {
     fn filter<P>(&self, img: &Image<P>) -> Image<P>
@@ -145,20 +146,25 @@ where
     let (width, height) = kern.size();
     let half_x = width / 2;
     let half_y = height / 2;
-    let sx = x as i32 - half_x as i32;
-    let sy = y as i32 - half_y as i32;
+    let sx = x as isize - half_x as isize;
+    let sy = y as isize - half_y as isize;
     for i in 0..width {
         for j in 0..height {
-            let ix = i as i32 + sx;
-            let iy = j as i32 + sy;
-            if ix >= 0 && iy >= 0 && ix < img.width() as i32 && iy < img.height() as i32 {
-                let tx = ix as usize;
-                let ty = iy as usize;
-                let a = img[(tx, ty)];
-                let b = kern[(i, j)];
-                let res = a * b;
-                ret = ret.saturating_add(res);
-            }
+            let ix = i as isize + sx;
+            let iy = j as isize + sy;
+            let eye = Eye::new(ix, iy).constant(P::zero());
+            let a = eye.look(&img);
+            let b = kern[(i, j)];
+            let res = a * b;
+            ret = ret.saturating_add(res);
+//            if ix >= 0 && iy >= 0 && ix < img.width() as isize && iy < img.height() as isize {
+//                let tx = ix as usize;
+//                let ty = iy as usize;
+//                let a = img[(tx, ty)];
+//                let b = kern[(i, j)];
+//                let res = a * b;
+//                ret = ret.saturating_add(res);
+//            }
         }
     }
     ret

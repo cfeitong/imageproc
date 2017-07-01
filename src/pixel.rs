@@ -350,11 +350,22 @@ define_saturating!(Gray);
 define_saturating!(BGR);
 define_saturating!(BGRA);
 
-// gray pixel literal
-// useful for testing
+// Gray pixel literal
 pub fn gray<T: Primitive>(x: T) -> Gray<T> {
     let t = [x,];
     Gray::from_raw(&t)
+}
+
+// BGR pixel literal
+pub fn bgr<T: Primitive>(b: T, g: T, r: T) -> BGR<T> {
+    let t = [b, g, r];
+    BGR::from_raw(&t)
+}
+
+// BGRA pixel literal
+pub fn bgra<T: Primitive>(b: T, g: T, r: T, a: T) -> BGRA<T> {
+    let t = [b, g, r, a];
+    BGRA::from_raw(&t)
 }
 
 
