@@ -350,6 +350,13 @@ define_saturating!(Gray);
 define_saturating!(BGR);
 define_saturating!(BGRA);
 
+// gray pixel literal
+// useful for testing
+pub fn gray<T: Primitive>(x: T) -> Gray<T> {
+    let t = [x,];
+    Gray::from_raw(&t)
+}
+
 
 #[cfg(test)]
 mod test {

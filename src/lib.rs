@@ -6,15 +6,16 @@ extern crate libc;
 extern crate nalgebra;
 extern crate num;
 
-mod traits;
+#[macro_use]
 pub mod image;
+pub mod traits;
 pub mod imageio;
 pub mod convert;
 pub mod transform;
 pub mod geo;
 pub mod math;
 pub mod op;
-pub mod view;
+pub mod eye;
 pub mod pixel;
 
 pub use imageio::{ImageIO, FreeImageIO};

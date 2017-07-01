@@ -152,12 +152,11 @@ impl<'a, T: Pixel + 'a> Image<T> {
         }
     }
 
-    pub fn from_raw(width: usize, height: usize, data: &[T]) -> Self {
-        let mut img = Self::new(width, height);
-        img.data = data.to_vec();
-        img
+    pub fn from_raw(width: usize, height: usize, raw: &[T]) -> Self {
+        let mut ret = Self::new(width, height);
+        ret.data = raw.to_vec();
+        ret
     }
-
     //pub fn crop(&self, rect: &Rect) -> Result<Image<T>, ImageError> {
     //}
 }
@@ -296,29 +295,25 @@ where
 // useful for testing
 #[macro_export]
 macro_rules! gray_image {
-    () => {{
-            use image::{ImageGray};
-            use pixel::{Gray, gray};
-            ImageGray::new(0, 0);
-    }};
-    ($( $( $x: expr ),*);*) => {{
-            let nested_array = [ $( [ $($x),* ] ),* ];
-            let flat_array: Vec<_> = nested_array.into_iter()
-                .flat_map(|row| row.into_iter())
-                .cloned()
-                .map(|x| gray(x))
-                .collect();
-            let w = nested_array[0].len();
-            let h = nested_array.len();
-            ImageGray::from_raw(w, h, &flat_array)
-
+    ( $( $($pixel: expr),* );* ) => {{
+            ($( $( $x: expr ),*);*) => {
+        let nested_array = [ $( [ $($pixel),* ] ),* ];
+        let flat_array: Vec<_> = nested_array.into_iter()
+            .flat_map(|row| row.into_iter())
+            .cloned()
+            .collect();
+        let w = nested_array[0].len();
+        let h = nested_array.len();
+        ImageGray::from_raw(w, h, &flat_array)
     }}
 }
+
 
 
 #[cfg(test)]
 mod test {
     use super::*;
+    use image::ImageGray;
 
     #[test]
     fn test_alloc() {
