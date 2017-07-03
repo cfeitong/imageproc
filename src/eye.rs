@@ -17,10 +17,11 @@ impl Mask for Recti {
 #[derive(Debug, Clone, Copy)]
 pub enum AlterType<P: Pixel> {
     Constant(P),
-    Reflect,
-    EdgeValue,
+    Mirror,
+    Extend,
 }
 
+// TODO: add mask support
 #[derive(Debug, Clone, Copy)]
 pub struct Eye<P: Pixel> {
     x: isize,
@@ -48,13 +49,13 @@ impl<P: Pixel> Eye<P> {
         self
     }
 
-    pub fn reflect(mut self) -> Self {
-        self.alter_type = AlterType::Reflect;
+    pub fn mirror(mut self) -> Self {
+        self.alter_type = AlterType::Mirror;
         self
     }
 
-    pub fn edge_value(mut self) -> Self {
-        self.alter_type = AlterType::EdgeValue;
+    pub fn extend(mut self) -> Self {
+        self.alter_type = AlterType::Extend;
         self
     }
 
@@ -65,7 +66,7 @@ impl<P: Pixel> Eye<P> {
         }
         match self.alter_type {
             AlterType::Constant(pixel) => pixel,
-            AlterType::EdgeValue => {
+            AlterType::Extend => {
                 let mut x = self.x;
                 let mut y = self.y;
                 x = min(x, img.width() as isize - 1);
@@ -74,7 +75,7 @@ impl<P: Pixel> Eye<P> {
                 y = max(y, 0);
                 img[(x as usize, y as usize)].clone()
             }
-            AlterType::Reflect => {
+            AlterType::Mirror => {
                 let mut x = self.x;
                 let mut y = self.y;
                 if x < 0 {
@@ -100,7 +101,7 @@ impl<P: Pixel> Default for Eye<P> {
         Eye {
             x: 0,
             y: 0,
-            alter_type: AlterType::Constant(P::zero()),
+            alter_type: AlterType::Extend,
         }
     }
 }
@@ -123,9 +124,9 @@ mod test {
         assert_eq!(eye.look(&img), gray(1u8));
         assert_eq!(eye.x(400).constant(gray(15u8)).look(&img), gray(15u8));
         assert_eq!(eye.constant(gray(15u8)).look(&img), gray(1u8));
-        assert_eq!(eye.x(-1).y(1).reflect().look(&img), gray(5u8));
-        assert_eq!(eye.edge_value().x(1).y(-100).look(&img), gray(2u8));
-        assert_eq!(eye.edge_value().x(-100).y(-100).look(&img), gray(1u8));
-        assert_eq!(eye.edge_value().x(100).y(100).look(&img), gray(9u8));
+        assert_eq!(eye.x(-1).y(1).mirror().look(&img), gray(5u8));
+        assert_eq!(eye.extend().x(1).y(-100).look(&img), gray(2u8));
+        assert_eq!(eye.extend().x(-100).y(-100).look(&img), gray(1u8));
+        assert_eq!(eye.extend().x(100).y(100).look(&img), gray(9u8));
     }
 }
