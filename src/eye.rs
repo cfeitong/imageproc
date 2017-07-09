@@ -34,13 +34,13 @@ impl<P: Pixel> Eye<P> {
         Self::default().x(x).y(y)
     }
 
-    pub fn x(mut self, _x: isize) -> Self {
-        self.x = _x;
+    pub fn x(mut self, x: isize) -> Self {
+        self.x = x;
         self
     }
 
-    pub fn y(mut self, _y: isize) -> Self {
-        self.y = _y;
+    pub fn y(mut self, y: isize) -> Self {
+        self.y = y;
         self
     }
 
@@ -60,8 +60,9 @@ impl<P: Pixel> Eye<P> {
     }
 
     pub fn look(&self, img: &Image<P>) -> P {
-        if 0 <= self.x && self.x < img.width() as isize &&
-           0 <= self.y && self.y < img.height() as isize {
+        if 0 <= self.x && self.x < img.width() as isize && 0 <= self.y &&
+            self.y < img.height() as isize
+        {
             return img[(self.x as usize, self.y as usize)];
         }
         match self.alter_type {
@@ -109,13 +110,14 @@ impl<P: Pixel> Default for Eye<P> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use pixel::{Gray,gray};
-    use image::ImageGray;
+    use image::{ImageGray};
+    use pixel::{Gray, gray};
 
 
     #[test]
     fn test_eye_look() {
-        let img = gray_image![
+        let img =
+            gray_image![
             1u8, 2u8, 3u8;
             4u8, 5u8, 6u8;
             7u8, 8u8, 9u8

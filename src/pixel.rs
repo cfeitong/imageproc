@@ -352,7 +352,7 @@ define_saturating!(BGRA);
 
 // Gray pixel literal
 pub fn gray<T: Primitive>(x: T) -> Gray<T> {
-    let t = [x,];
+    let t = [x];
     Gray::from_raw(&t)
 }
 

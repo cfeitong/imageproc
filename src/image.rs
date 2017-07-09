@@ -153,7 +153,7 @@ impl<'a, T: Pixel + 'a> Image<T> {
     }
 
     pub fn from_raw(width: usize, height: usize, data: &[T]) -> Self {
-        assert_eq!(width*height, data.len());
+        assert_eq!(width * height, data.len());
         let mut img = Self::new(width, height);
         img.data = data.to_vec();
         img

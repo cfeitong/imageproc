@@ -221,16 +221,18 @@ impl MedianFilter {
 #[derive(Debug)]
 pub struct BoxFilter {
     pub width: usize,
-    pub height: usize
+    pub height: usize,
 }
 
 impl Filter for BoxFilter {
     fn filter<P>(&self, img: &Image<P>) -> Image<P>
-        where P: Pixel + Mul<f32, Output = P> + Saturating {
+    where
+        P: Pixel + Mul<f32, Output = P> + Saturating,
+    {
         let mut ret = Image::new(img.width(), img.height());
         for x in 0..img.width() {
             for y in 0..img.height() {
-                ret[(x,y)] = box_filter_calc_one(&self, x, y, &img);
+                ret[(x, y)] = box_filter_calc_one(&self, x, y, &img);
             }
         }
         ret
@@ -241,12 +243,11 @@ fn box_filter_calc_one<P: Pixel>(filter: &BoxFilter, x: usize, y: usize, img: &I
     let mut ret = P::zero();
     let sx = x as isize - filter.width as isize / 2;
     let sy = y as isize - filter.height as isize / 2;
-    let sum = 0f32;
     let size = filter.width as f32 * filter.height as f32;
     for c in 0..img.channels() {
         let mut sum = 0f32;
-        for i in sx..(sx+filter.width as isize) {
-            for j in sy..(sy+filter.height as isize) {
+        for i in sx..(sx + filter.width as isize) {
+            for j in sy..(sy + filter.height as isize) {
                 let eye = Eye::new(i, j);
                 sum += eye.look(img).raw()[c].to_f32().unwrap();
             }
@@ -258,12 +259,9 @@ fn box_filter_calc_one<P: Pixel>(filter: &BoxFilter, x: usize, y: usize, img: &I
 
 impl BoxFilter {
     fn new(width: usize, height: usize) -> Self {
-        assert_eq!(width&1, 1);
-        assert_eq!(height&1, 1);
-        BoxFilter {
-            width,
-            height
-        }
+        assert_eq!(width & 1, 1);
+        assert_eq!(height & 1, 1);
+        BoxFilter { width, height }
     }
 }
 
