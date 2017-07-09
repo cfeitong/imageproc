@@ -1,7 +1,7 @@
 use std::slice;
 use num::traits::Bounded;
 use std::ops::{Index, IndexMut};
-use pixel::{Pixel, AlphaPixel, BGR, BGRA, Gray};
+use pixel::{Pixel, AlphaPixel, BGR, BGRA, Gray, Binary};
 
 #[derive(Debug)]
 pub enum ImageError {
@@ -16,7 +16,7 @@ pub trait GenericImage {
     type Pixel: Pixel;
 }
 
-#[derive(Debug)]
+#[derive(PartialEq, Eq, Debug)]
 pub struct Image<T: Pixel> {
     w: usize,
     h: usize,
@@ -158,9 +158,6 @@ impl<'a, T: Pixel + 'a> Image<T> {
         img.data = data.to_vec();
         img
     }
-
-    //pub fn crop(&self, rect: &Rect) -> Result<Image<T>, ImageError> {
-    //}
 }
 
 pub trait AlphaImage {
@@ -214,6 +211,7 @@ impl<T: Pixel> IndexMut<(usize, usize)> for Image<T> {
 pub type ImageGray = Image<Gray<u8>>;
 pub type ImageBGR = Image<BGR<u8>>;
 pub type ImageBGRA = Image<BGRA<u8>>;
+pub type ImageBinary = Image<Binary>;
 
 pub type ImageGrayf = Image<Gray<f32>>;
 pub type ImageBGRf = Image<BGR<f32>>;
@@ -294,6 +292,19 @@ where
     }
 }
 
+use std::ops::{Not, BitAnd, BitOr, BitXor};
+impl Not for ImageBinary {
+    type Output = Self;
+    fn not(mut self) -> Self::Output {
+        for r in 0..self.width() {
+            for c in 0..self.height() {
+                self[(r,c)] = !self[(r,c)];
+            }
+        }
+        self
+    }
+}
+
 // useful for testing
 #[macro_export]
 macro_rules! gray_image {
@@ -320,6 +331,7 @@ macro_rules! gray_image {
 #[cfg(test)]
 mod test {
     use super::*;
+    use pixel::*;
 
     #[test]
     fn test_alloc() {
@@ -349,6 +361,21 @@ mod test {
         for (_, _, p) in img.iter_mut() {
             *p = *p + BGRA::<u8>([128, 128, 0, 0]);
         }
+    }
+
+    #[test]
+    fn test_binary_not() {
+        let mut img = gray_image![
+            1, 1, 1;
+            0, 0, 0;
+            1, 0, 1
+        ];
+        img = !img;
+        assert_eq!(img, gray_image![
+            0, 0, 0;
+            1, 1, 1;
+            0, 1, 0
+        ]);
     }
 
 }

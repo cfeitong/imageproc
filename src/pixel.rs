@@ -368,6 +368,26 @@ pub fn bgra<T: Primitive>(b: T, g: T, r: T, a: T) -> BGRA<T> {
     BGRA::from_raw(&t)
 }
 
+pub type Binary = Gray<u8>;
+
+use std::ops::{Not, BitAnd, BitOr, BitXor};
+
+impl Not for Binary {
+    type Output = Self;
+    fn not(mut self) -> Self::Output {
+        self[0] = 1-self[0];
+        self
+    }
+}
+
+impl BitAnd for Binary {
+    type Output = Self;
+    fn bitand(mut self, rhs: Self) -> Self::Output {
+        self[0] = self[0] & rhs[0];
+        self
+    }
+}
+
 
 #[cfg(test)]
 mod test {
