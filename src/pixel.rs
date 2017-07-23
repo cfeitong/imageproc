@@ -2,6 +2,7 @@ use traits::Primitive;
 use num::{Saturating, NumCast};
 use std::ops::{Index, IndexMut, Add, Sub, Mul};
 use std::fmt::Debug;
+use math::utils::clip_from_f32;
 
 #[derive(PartialEq, Eq, Clone, Debug, Copy, Hash)]
 #[repr(C, packed)]
@@ -39,7 +40,8 @@ impl<T: Primitive> Color<T> {
 pub const MAX_CHANNEL_COUNT: usize = 4;
 
 /// A pixel object is usually not used standalone but as a view into an image buffer.
-pub trait Pixel: Debug + Copy + Clone + Index<usize> {
+pub trait Pixel
+:Debug + Copy + Clone + Index<usize> + IndexMut<usize> + Add<Self, Output=Self> + Mul<f32, Output=Self> {
     /// The underlying subpixel type.
     type Subpixel: Primitive;
 
@@ -215,13 +217,7 @@ impl<T: Primitive, U: Primitive> Add<U> for $ident<T> {
         for i in 0..$channels {
             let a = self.data[i].to_f32().unwrap();
             let b = other.to_f32().unwrap();
-            m[i] = if T::max_value().to_f32().unwrap() < a+b {
-                T::max_value()
-            } else {
-                T::from(a + b).unwrap()
-            };
-
-            // m[i] = U::from(self.data[i]).unwrap() + other;
+            m[i] = clip_from_f32(a+b, T::min_value(), T::max_value());
         }
         $ident(m)
     }
@@ -238,12 +234,7 @@ impl<T: Primitive, U: Primitive> Sub<U> for $ident<T> {
             let a = self.data[i].to_f32().unwrap();
             let b = other.to_f32().unwrap();
 
-            m[i] = if T::min_value().to_f32().unwrap() > a-b {
-                T::min_value()
-            } else {
-                T::from(a - b).unwrap()
-            };
-            // m[i] = U::from(self.data[i]).unwrap() - other;
+            m[i] = clip_from_f32(a-b, T::min_value(), T::max_value());
         }
         $ident(m)
     }
@@ -260,12 +251,7 @@ impl<T: Primitive, U: Primitive> Mul<U> for $ident<T> {
             let a = self.data[i].to_f32().unwrap();
             let b = other.to_f32().unwrap();
 
-            m[i] = if T::max_value().to_f32().unwrap() < a * b {
-                T::max_value()
-            } else {
-                T::from(a * b).unwrap()
-            }
-            // m[i] = U::from(self.data[i]).unwrap() * other;
+            m[i] = clip_from_f32(a*b, T::min_value(), T::max_value());
         }
         $ident(m)
     }

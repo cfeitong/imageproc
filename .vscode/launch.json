@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug",
+            "program": "${workspaceRoot}/target/debug/imageproc-0e69cd812a3fcc3e",
+            "args": [],
+            "cwd": "${workspaceRoot}"
+        }
+    ]
+}

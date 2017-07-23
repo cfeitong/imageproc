@@ -2,13 +2,14 @@ use image::Image;
 use pixel::Pixel;
 use std::ops::{Index, IndexMut, Mul};
 use num::cast;
-use num::{Saturating, ToPrimitive};
+use num::{Saturating, ToPrimitive, Bounded};
 use eye::Eye;
+use math::utils::clip_from_f32;
 
 pub trait Filter {
     fn filter<P>(&self, img: &Image<P>) -> Image<P>
     where
-        P: Pixel + Mul<f32, Output = P> + Saturating;
+        P: Pixel + Saturating;
 }
 
 pub trait Kernel
@@ -75,7 +76,7 @@ define_kernel!(GeneralKernel);
 define_kernel!(GaussianKernel);
 
 impl GeneralKernel {
-    fn new(width: usize, height: usize, _data: &[f32]) -> Self {
+    pub fn new(width: usize, height: usize, _data: &[f32]) -> Self {
         assert_eq!(width * height, _data.len());
         let mut data = Vec::new();
         for i in 0..height {
@@ -94,7 +95,7 @@ impl GeneralKernel {
 }
 
 impl GaussianKernel {
-    fn new(size: usize, sigma: f32) -> Self {
+    pub fn new(size: usize, sigma: f32) -> Self {
         assert_eq!(size & 1, 1);
         let mut data = Vec::new();
         for x in 0..size {
@@ -140,27 +141,31 @@ fn normalize<T: Kernel>(kern: &mut T) {
 
 fn kern_calc_one_pos<K, P>(kern: &K, x: usize, y: usize, img: &Image<P>) -> P
 where
-    P: Pixel + Saturating + Mul<f32, Output = P>,
+    P: Pixel + Saturating,
     K: Kernel,
 {
-    let mut ret: P = P::zero();
     let (width, height) = kern.size();
     let half_x = width / 2;
     let half_y = height / 2;
     let sx = x as isize - half_x as isize;
     let sy = y as isize - half_y as isize;
+
+    let mut ret: Vec<f32> = Vec::new();
+    for _ in 0..img.channels() { ret.push(0f32); }
     for i in 0..width {
         for j in 0..height {
             let ix = i as isize + sx;
             let iy = j as isize + sy;
-            let eye = Eye::new(ix, iy).constant(P::zero());
+            let eye = Eye::new(ix, iy).extend();
             let a = eye.look(&img);
             let b = kern[(i, j)];
-            let res = a * b;
-            ret = ret.saturating_add(res);
+            let v: Vec<f32> = a.raw().iter().map(|ref k| k.to_f32().unwrap() * b).collect();
+            ret.iter_mut().enumerate().map(|(i, it)| *it += v[i]).collect::<Vec<_>>();
         }
     }
-    ret
+    let ret: Vec<_> = ret.iter().map(
+        |v| clip_from_f32(*v, P::Subpixel::min_value(), P::Subpixel::max_value())).collect();
+    P::from_raw(&ret)
 }
 
 #[derive(Debug)]
@@ -211,7 +216,7 @@ fn median_filter_calc_one<P: Pixel>(
 }
 
 impl MedianFilter {
-    fn new(width: usize, height: usize) -> Self {
+    pub fn new(width: usize, height: usize) -> Self {
         assert_eq!(width & 1, 1);
         assert_eq!(height & 1, 1);
         MedianFilter { width, height }
@@ -258,7 +263,7 @@ fn box_filter_calc_one<P: Pixel>(filter: &BoxFilter, x: usize, y: usize, img: &I
 }
 
 impl BoxFilter {
-    fn new(width: usize, height: usize) -> Self {
+    pub fn new(width: usize, height: usize) -> Self {
         assert_eq!(width & 1, 1);
         assert_eq!(height & 1, 1);
         BoxFilter { width, height }

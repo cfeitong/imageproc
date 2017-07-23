@@ -311,9 +311,13 @@ macro_rules! gray_image {
     () => {{
             use image::{ImageGray};
             use pixel::{Gray, gray};
+
             ImageGray::new(0, 0);
     }};
     ($( $( $x: expr ),*);*) => {{
+            use image::{ImageGray};
+            use pixel::{Gray, gray};
+
             let nested_array = [ $( [ $($x),* ] ),* ];
             let flat_array: Vec<_> = nested_array.into_iter()
                 .flat_map(|row| row.into_iter())
