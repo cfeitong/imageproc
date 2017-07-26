@@ -151,7 +151,9 @@ where
     let sy = y as isize - half_y as isize;
 
     let mut ret: Vec<f32> = Vec::new();
-    for _ in 0..img.channels() { ret.push(0f32); }
+    for _ in 0..img.channels() {
+        ret.push(0f32);
+    }
     for i in 0..width {
         for j in 0..height {
             let ix = i as isize + sx;
@@ -159,12 +161,21 @@ where
             let eye = Eye::new(ix, iy).extend();
             let a = eye.look(&img);
             let b = kern[(i, j)];
-            let v: Vec<f32> = a.raw().iter().map(|ref k| k.to_f32().unwrap() * b).collect();
-            ret.iter_mut().enumerate().map(|(i, it)| *it += v[i]).collect::<Vec<_>>();
+            let v: Vec<f32> = a.raw()
+                .iter()
+                .map(|ref k| k.to_f32().unwrap() * b)
+                .collect();
+            ret.iter_mut()
+                .enumerate()
+                .map(|(i, it)| *it += v[i])
+                .collect::<Vec<_>>();
         }
     }
-    let ret: Vec<_> = ret.iter().map(
-        |v| clip_from_f32(*v, P::Subpixel::min_value(), P::Subpixel::max_value())).collect();
+    let ret: Vec<_> = ret.iter()
+        .map(|v| {
+            clip_from_f32(*v, P::Subpixel::min_value(), P::Subpixel::max_value())
+        })
+        .collect();
     P::from_raw(&ret)
 }
 

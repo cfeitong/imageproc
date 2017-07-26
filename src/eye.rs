@@ -110,7 +110,7 @@ impl<P: Pixel> Default for Eye<P> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use image::{ImageGray};
+    use image::ImageGray;
     use pixel::{Gray, gray};
 
 

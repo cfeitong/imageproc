@@ -27,11 +27,11 @@ pub fn clip_from_f32<T: Primitive>(x: f32, min: T, max: T) -> T {
     let min = min.to_f32().unwrap();
     let max = max.to_f32().unwrap();
     let ret = if x < min {
-                min
-            } else if x > max {
-                max
-            } else {
-                x
-            };
+        min
+    } else if x > max {
+        max
+    } else {
+        x
+    };
     T::from(ret).unwrap()
 }

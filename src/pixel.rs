@@ -41,7 +41,13 @@ pub const MAX_CHANNEL_COUNT: usize = 4;
 
 /// A pixel object is usually not used standalone but as a view into an image buffer.
 pub trait Pixel
-:Debug + Copy + Clone + Index<usize> + IndexMut<usize> + Add<Self, Output=Self> + Mul<f32, Output=Self> {
+    : Debug
+    + Copy
+    + Clone
+    + Index<usize>
+    + IndexMut<usize>
+    + Add<Self, Output = Self>
+    + Mul<f32, Output = Self> {
     /// The underlying subpixel type.
     type Subpixel: Primitive;
 
@@ -356,12 +362,18 @@ pub fn bgra<T: Primitive>(b: T, g: T, r: T, a: T) -> BGRA<T> {
 
 pub type Binary = Gray<u8>;
 
-use std::ops::{Not, BitAnd, BitOr, BitXor};
+impl Binary {
+    pub fn invert(&mut self) {
+        self[0] = 1 - self[0];
+    }
+}
+
+use std::ops::{Not, BitAnd, BitOr, BitXor, BitAndAssign, BitOrAssign, BitXorAssign};
 
 impl Not for Binary {
     type Output = Self;
     fn not(mut self) -> Self::Output {
-        self[0] = 1-self[0];
+        self[0] = 1 - self[0];
         self
     }
 }
@@ -374,6 +386,39 @@ impl BitAnd for Binary {
     }
 }
 
+impl BitOr for Binary {
+    type Output = Self;
+    fn bitor(mut self, rhs: Self) -> Self::Output {
+        self[0] = self[0] | rhs[0];
+        self
+    }
+}
+
+impl BitXor for Binary {
+    type Output = Self;
+    fn bitxor(mut self, rhs: Self) -> Self::Output {
+        self[0] = self[0] ^ rhs[0];
+        self
+    }
+}
+
+impl BitAndAssign for Binary {
+    fn bitand_assign(&mut self, rhs: Self) {
+        *self = *self & rhs;
+    }
+}
+
+impl BitOrAssign for Binary {
+    fn bitor_assign(&mut self, rhs: Self) {
+        *self = *self | rhs;
+    }
+}
+
+impl BitXorAssign for Binary {
+    fn bitxor_assign(&mut self, rhs: Self) {
+        *self = *self ^ rhs;
+    }
+}
 
 #[cfg(test)]
 mod test {

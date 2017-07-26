@@ -1,6 +1,7 @@
 #![feature(inclusive_range_syntax)]
-#![warn(unused_qualifications)]
+// #![warn(unused_qualifications)]
 #![allow(dead_code)]
+#![allow(unused_imports)]
 
 extern crate libc;
 extern crate nalgebra;

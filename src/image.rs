@@ -292,18 +292,83 @@ where
     }
 }
 
-use std::ops::{Not, BitAnd, BitOr, BitXor};
+impl ImageBinary {
+    pub fn invert(&mut self) {
+        self.iter_mut().map(|(_, _, p)| p.invert()).collect::<Vec<_>>();
+    }
+}
+
+use std::ops::{Not, BitAnd, BitOr, BitXor, BitAndAssign, BitOrAssign, BitXorAssign};
+
 impl Not for ImageBinary {
     type Output = Self;
     fn not(mut self) -> Self::Output {
         for r in 0..self.width() {
             for c in 0..self.height() {
-                self[(r,c)] = !self[(r,c)];
+                self[(r, c)] = !self[(r, c)];
             }
         }
         self
     }
 }
+
+impl BitAnd for ImageBinary {
+    type Output = Self;
+    fn bitand(self, rhs: Self) -> Self::Output {
+        let mut ret = self.clone();
+        for x in 0..ret.width() {
+            for y in 0..ret.height() {
+                ret[(x, y)] = ret[(x, y)] & rhs[(x, y)];
+            }
+        }
+        ret
+    }
+}
+
+impl BitOr for ImageBinary {
+    type Output = Self;
+    fn bitor(self, rhs: Self) -> Self::Output {
+        let mut ret = self.clone();
+        for x in 0..ret.width() {
+            for y in 0..ret.height() {
+                ret[(x, y)] = ret[(x, y)] | rhs[(x, y)];
+            }
+        }
+        ret
+    }
+}
+
+impl BitXor for ImageBinary {
+    type Output = Self;
+    fn bitxor(self, rhs: Self) -> Self::Output {
+        let mut ret = self.clone();
+        for x in 0..ret.width() {
+            for y in 0..ret.height() {
+                ret[(x, y)] = ret[(x, y)] ^ rhs[(x, y)];
+            }
+        }
+        ret
+    }
+}
+
+impl BitAndAssign for ImageBinary {
+    fn bitand_assign(&mut self, rhs: Self) {
+        *self = self.clone() & rhs;
+    }
+}
+
+impl BitOrAssign for ImageBinary {
+    fn bitor_assign(&mut self, rhs: Self) {
+        *self = self.clone() | rhs;
+    }
+}
+
+impl BitXorAssign for ImageBinary {
+    fn bitxor_assign(&mut self, rhs: Self) {
+        *self = self.clone() ^ rhs;
+    }
+}
+
 
 // useful for testing
 #[macro_export]
@@ -369,17 +434,158 @@ mod test {
 
     #[test]
     fn test_binary_not() {
-        let mut img = gray_image![
+        let mut img =
+            gray_image![
             1, 1, 1;
             0, 0, 0;
             1, 0, 1
         ];
         img = !img;
+        assert_eq!(
+            img,
+            gray_image![
+            0, 0, 0;
+            1, 1, 1;
+            0, 1, 0
+        ]
+        );
+    }
+
+    #[test]
+    fn test_binary_and() {
+        let img1 =
+            gray_image![
+            1, 1, 1;
+            0, 1, 0;
+            1, 0, 1
+        ];
+        let img2 = 
+            gray_image![
+            0, 0, 0;
+            1, 1, 1;
+            0, 1, 0
+        ];
+        assert_eq!(img1 & img2, 
+            gray_image![
+                0, 0, 0;
+                0, 1, 0;
+                0, 0, 0
+            ]);
+    }
+
+    #[test]
+    fn test_binary_and_assign() {
+        let mut img = gray_image![
+            0, 1, 0;
+            1, 1, 1;
+            0, 0, 0
+        ];
+        img &= gray_image![
+            0, 0, 0;
+            0, 1, 0;
+            0, 1, 0
+        ];
         assert_eq!(img, gray_image![
             0, 0, 0;
+            0, 1, 0;
+            0, 0, 0
+        ]);
+    }
+
+    #[test]
+    fn test_binary_or() {
+        let img1 =
+            gray_image![
+            1, 1, 1;
+            0, 1, 0;
+            1, 0, 0
+        ];
+        let img2 = 
+            gray_image![
+            0, 0, 0;
+            1, 1, 1;
+            0, 1, 0
+        ];
+        assert_eq!(img1 | img2, 
+            gray_image![
+                1, 1, 1;
+                1, 1, 1;
+                1, 1, 0
+            ]);
+    }
+
+    #[test]
+    fn test_binary_or_assign() {
+        let mut img = gray_image![
+            0, 1, 0;
+            1, 1, 1;
+            0, 0, 0
+        ];
+        img |= gray_image![
+            0, 0, 0;
+            0, 1, 0;
+            0, 1, 0
+        ];
+        assert_eq!(img, gray_image![
+            0, 1, 0;
             1, 1, 1;
             0, 1, 0
         ]);
     }
 
+    #[test]
+    fn test_binary_xor() {
+        let img1 =
+            gray_image![
+            1, 1, 1;
+            0, 1, 0;
+            1, 0, 0
+        ];
+        let img2 = 
+            gray_image![
+            0, 0, 1;
+            1, 1, 1;
+            0, 1, 0
+        ];
+        assert_eq!(img1 ^ img2, 
+            gray_image![
+                1, 1, 0;
+                1, 0, 1;
+                1, 1, 0
+            ]);
+    }
+
+    #[test]
+    fn test_binary_xor_assign() {
+        let mut img = gray_image![
+            0, 1, 0;
+            1, 1, 1;
+            0, 0, 0
+        ];
+        img ^= gray_image![
+            0, 0, 0;
+            0, 1, 0;
+            0, 1, 0
+        ];
+        assert_eq!(img, gray_image![
+            0, 1, 0;
+            1, 0, 1;
+            0, 1, 0
+        ]);
+    }
+
+    #[test]
+    fn test_binary_invert() {
+        let mut img = gray_image![
+            0, 1, 0;
+            1, 1, 1;
+            0, 1, 0
+        ];
+        img.invert();
+        assert_eq!(img, gray_image![
+            1, 0, 1;
+            0, 0, 0;
+            1, 0, 1
+        ]);
+    }
 }
