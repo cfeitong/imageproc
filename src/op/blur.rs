@@ -2,7 +2,7 @@ use image::Image;
 use pixel::Pixel;
 use std::ops::{Index, IndexMut, Mul};
 use num::cast;
-use num::{Saturating, ToPrimitive, };
+use num::{Saturating, ToPrimitive};
 use eye::Eye;
 use op::filter::{Filter, Kernel, normalize, kern_calc_one_pos};
 
@@ -58,9 +58,9 @@ impl Filter for MedianFilter {
         P: Pixel + Mul<f32, Output = P> + Saturating,
     {
         let mut ret: Image<P> = Image::new(img.width(), img.height());
-        ret.iter_mut()
-            .for_each(|(x, y, p)|
-                *p = median_filter_calc_one(self, x as usize, y as usize, img));
+        ret.iter_mut().for_each(|(x, y, p)| {
+            *p = median_filter_calc_one(self, x as usize, y as usize, img)
+        });
         ret
     }
 }
@@ -111,8 +111,9 @@ impl Filter for BoxFilter {
         P: Pixel + Mul<f32, Output = P> + Saturating,
     {
         let mut ret = Image::new(img.width(), img.height());
-        ret.iter_mut()
-            .for_each(|(x, y, p)| *p = box_filter_calc_one(self, x, y, img));
+        ret.iter_mut().for_each(|(x, y, p)| {
+            *p = box_filter_calc_one(self, x, y, img)
+        });
         ret
     }
 }

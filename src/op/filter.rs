@@ -127,9 +127,7 @@ where
                 .iter()
                 .map(|ref k| k.to_f32().unwrap() * b)
                 .collect();
-            ret.iter_mut()
-                .enumerate()
-                .for_each(|(i, it)| *it += v[i]);
+            ret.iter_mut().enumerate().for_each(|(i, it)| *it += v[i]);
         }
     }
     let ret: Vec<_> = ret.iter()

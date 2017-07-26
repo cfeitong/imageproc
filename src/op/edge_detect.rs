@@ -1,6 +1,6 @@
 
 use op::filter::{Filter, GeneralKernel};
-use image::{Image};
+use image::Image;
 use pixel::Pixel;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -27,9 +27,9 @@ impl Filter for Sobel {
         let imgy = kerny.filter(img);
 
         let mut ret: Image<P> = Image::new(img.width(), img.height());
-        ret
-            .iter_mut()
-            .for_each(|(i,j,p)| *p = imgx[(i, j)].saturating_add(imgy[(i, j)]));
+        ret.iter_mut().for_each(|(i, j, p)| {
+            *p = imgx[(i, j)].saturating_add(imgy[(i, j)])
+        });
         ret
     }
 }
@@ -37,7 +37,7 @@ impl Filter for Sobel {
 #[cfg(test)]
 mod test {
     use super::*;
-    use image::{ImageBGRA};
+    use image::ImageBGRA;
     use imageio::{FreeImageIO, ImageIO};
     use std::path::Path;
 

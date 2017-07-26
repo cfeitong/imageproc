@@ -294,8 +294,7 @@ where
 
 impl ImageBinary {
     pub fn invert(&mut self) {
-        self.iter_mut()
-            .for_each(|(_, _, p)| p.invert());
+        self.iter_mut().for_each(|(_, _, p)| p.invert());
     }
 }
 
