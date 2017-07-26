@@ -1,2 +1,4 @@
+#[macro_use]
 pub mod filter;
-pub mod sobel;
+pub mod edge_detect;
+pub mod blur;

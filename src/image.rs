@@ -294,7 +294,9 @@ where
 
 impl ImageBinary {
     pub fn invert(&mut self) {
-        self.iter_mut().map(|(_, _, p)| p.invert()).collect::<Vec<_>>();
+        self.iter_mut()
+            .map(|(_, _, p)| p.invert())
+            .collect::<Vec<_>>();
     }
 }
 
@@ -459,37 +461,44 @@ mod test {
             0, 1, 0;
             1, 0, 1
         ];
-        let img2 = 
+        let img2 =
             gray_image![
             0, 0, 0;
             1, 1, 1;
             0, 1, 0
         ];
-        assert_eq!(img1 & img2, 
+        assert_eq!(
+            img1 & img2,
             gray_image![
                 0, 0, 0;
                 0, 1, 0;
                 0, 0, 0
-            ]);
+            ]
+        );
     }
 
     #[test]
     fn test_binary_and_assign() {
-        let mut img = gray_image![
+        let mut img =
+            gray_image![
             0, 1, 0;
             1, 1, 1;
             0, 0, 0
         ];
-        img &= gray_image![
+        img &=
+            gray_image![
             0, 0, 0;
             0, 1, 0;
             0, 1, 0
         ];
-        assert_eq!(img, gray_image![
+        assert_eq!(
+            img,
+            gray_image![
             0, 0, 0;
             0, 1, 0;
             0, 0, 0
-        ]);
+        ]
+        );
     }
 
     #[test]
@@ -500,37 +509,44 @@ mod test {
             0, 1, 0;
             1, 0, 0
         ];
-        let img2 = 
+        let img2 =
             gray_image![
             0, 0, 0;
             1, 1, 1;
             0, 1, 0
         ];
-        assert_eq!(img1 | img2, 
+        assert_eq!(
+            img1 | img2,
             gray_image![
                 1, 1, 1;
                 1, 1, 1;
                 1, 1, 0
-            ]);
+            ]
+        );
     }
 
     #[test]
     fn test_binary_or_assign() {
-        let mut img = gray_image![
+        let mut img =
+            gray_image![
             0, 1, 0;
             1, 1, 1;
             0, 0, 0
         ];
-        img |= gray_image![
+        img |=
+            gray_image![
             0, 0, 0;
             0, 1, 0;
             0, 1, 0
         ];
-        assert_eq!(img, gray_image![
+        assert_eq!(
+            img,
+            gray_image![
             0, 1, 0;
             1, 1, 1;
             0, 1, 0
-        ]);
+        ]
+        );
     }
 
     #[test]
@@ -541,51 +557,62 @@ mod test {
             0, 1, 0;
             1, 0, 0
         ];
-        let img2 = 
+        let img2 =
             gray_image![
             0, 0, 1;
             1, 1, 1;
             0, 1, 0
         ];
-        assert_eq!(img1 ^ img2, 
+        assert_eq!(
+            img1 ^ img2,
             gray_image![
                 1, 1, 0;
                 1, 0, 1;
                 1, 1, 0
-            ]);
+            ]
+        );
     }
 
     #[test]
     fn test_binary_xor_assign() {
-        let mut img = gray_image![
+        let mut img =
+            gray_image![
             0, 1, 0;
             1, 1, 1;
             0, 0, 0
         ];
-        img ^= gray_image![
+        img ^=
+            gray_image![
             0, 0, 0;
             0, 1, 0;
             0, 1, 0
         ];
-        assert_eq!(img, gray_image![
+        assert_eq!(
+            img,
+            gray_image![
             0, 1, 0;
             1, 0, 1;
             0, 1, 0
-        ]);
+        ]
+        );
     }
 
     #[test]
     fn test_binary_invert() {
-        let mut img = gray_image![
+        let mut img =
+            gray_image![
             0, 1, 0;
             1, 1, 1;
             0, 1, 0
         ];
         img.invert();
-        assert_eq!(img, gray_image![
+        assert_eq!(
+            img,
+            gray_image![
             1, 0, 1;
             0, 0, 0;
             1, 0, 1
-        ]);
+        ]
+        );
     }
 }
