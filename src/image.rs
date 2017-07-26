@@ -295,8 +295,7 @@ where
 impl ImageBinary {
     pub fn invert(&mut self) {
         self.iter_mut()
-            .map(|(_, _, p)| p.invert())
-            .collect::<Vec<_>>();
+            .for_each(|(_, _, p)| p.invert());
     }
 }
 
@@ -383,7 +382,7 @@ macro_rules! gray_image {
     }};
     ($( $( $x: expr ),*);*) => {{
             use image::{ImageGray};
-            use pixel::{Gray, gray};
+            use pixel::{gray};
 
             let nested_array = [ $( [ $($x),* ] ),* ];
             let flat_array: Vec<_> = nested_array.into_iter()

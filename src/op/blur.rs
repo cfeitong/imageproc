@@ -2,9 +2,8 @@ use image::Image;
 use pixel::Pixel;
 use std::ops::{Index, IndexMut, Mul};
 use num::cast;
-use num::{Saturating, ToPrimitive, Bounded};
+use num::{Saturating, ToPrimitive, };
 use eye::Eye;
-use math::utils::clip_from_f32;
 use op::filter::{Filter, Kernel, normalize, kern_calc_one_pos};
 
 
@@ -59,11 +58,9 @@ impl Filter for MedianFilter {
         P: Pixel + Mul<f32, Output = P> + Saturating,
     {
         let mut ret: Image<P> = Image::new(img.width(), img.height());
-        for x in 0..img.width() {
-            for y in 0..img.height() {
-                ret[(x, y)] = median_filter_calc_one(self, x as usize, y as usize, img);
-            }
-        }
+        ret.iter_mut()
+            .for_each(|(x, y, p)|
+                *p = median_filter_calc_one(self, x as usize, y as usize, img));
         ret
     }
 }
@@ -114,11 +111,8 @@ impl Filter for BoxFilter {
         P: Pixel + Mul<f32, Output = P> + Saturating,
     {
         let mut ret = Image::new(img.width(), img.height());
-        for x in 0..img.width() {
-            for y in 0..img.height() {
-                ret[(x, y)] = box_filter_calc_one(&self, x, y, &img);
-            }
-        }
+        ret.iter_mut()
+            .for_each(|(x, y, p)| *p = box_filter_calc_one(self, x, y, img));
         ret
     }
 }
@@ -128,6 +122,7 @@ fn box_filter_calc_one<P: Pixel>(filter: &BoxFilter, x: usize, y: usize, img: &I
     let sx = x as isize - filter.width as isize / 2;
     let sy = y as isize - filter.height as isize / 2;
     let size = filter.width as f32 * filter.height as f32;
+
     for c in 0..img.channels() {
         let mut sum = 0f32;
         for i in sx..(sx + filter.width as isize) {

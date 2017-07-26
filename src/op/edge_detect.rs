@@ -1,7 +1,6 @@
 
 use op::filter::{Filter, GeneralKernel};
-use imageio::{ImageIO, FreeImageIO};
-use image::{Image, ImageBGRA};
+use image::{Image};
 use pixel::Pixel;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -15,7 +14,6 @@ impl Sobel {
 }
 
 use num::Saturating;
-use std::ops::{Mul, Add};
 impl Filter for Sobel {
     fn filter<P>(&self, img: &Image<P>) -> Image<P>
     where
@@ -29,11 +27,9 @@ impl Filter for Sobel {
         let imgy = kerny.filter(img);
 
         let mut ret: Image<P> = Image::new(img.width(), img.height());
-        for i in 0..ret.width() {
-            for j in 0..ret.height() {
-                ret[(i, j)] = imgx[(i, j)].saturating_add(imgy[(i, j)]);
-            }
-        }
+        ret
+            .iter_mut()
+            .for_each(|(i,j,p)| *p = imgx[(i, j)].saturating_add(imgy[(i, j)]));
         ret
     }
 }
@@ -41,11 +37,9 @@ impl Filter for Sobel {
 #[cfg(test)]
 mod test {
     use super::*;
-    use image::{ImageGray, ImageBGRA};
+    use image::{ImageBGRA};
     use imageio::{FreeImageIO, ImageIO};
     use std::path::Path;
-    use std::fs::File;
-    use std::io::Write;
 
     #[test]
     fn test_sobel_filter() {

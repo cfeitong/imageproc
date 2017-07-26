@@ -1,7 +1,6 @@
 use image::Image;
 use pixel::Pixel;
 use std::ops::{Index, IndexMut, Mul};
-use num::cast;
 use num::{Saturating, ToPrimitive, Bounded};
 use eye::Eye;
 use math::utils::clip_from_f32;
@@ -130,8 +129,7 @@ where
                 .collect();
             ret.iter_mut()
                 .enumerate()
-                .map(|(i, it)| *it += v[i])
-                .collect::<Vec<_>>();
+                .for_each(|(i, it)| *it += v[i]);
         }
     }
     let ret: Vec<_> = ret.iter()
@@ -152,7 +150,7 @@ mod test {
     use std::path::Path;
 
     #[test]
-    fn test_convolution() {
+    fn test_general_filter() {
         let tmp: Vec<f32> = vec![0f32, 0f32, 1f32, 0f32, 0f32, 1f32, 0f32, 0f32, 1f32];
         let kern = GeneralKernel::new(3, 3, &tmp);
         let path = Path::new("./tests/cat.jpg");
